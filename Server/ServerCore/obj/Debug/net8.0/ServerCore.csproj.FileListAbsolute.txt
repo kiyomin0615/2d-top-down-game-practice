@@ -1,0 +1,12 @@
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\bin\Debug\net8.0\ServerCore.deps.json
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\bin\Debug\net8.0\ServerCore.dll
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\bin\Debug\net8.0\ServerCore.pdb
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ServerCore.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ServerCore.AssemblyInfoInputs.cache
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ServerCore.AssemblyInfo.cs
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ServerCore.csproj.CoreCompileInputs.cache
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ServerCore.sourcelink.json
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ServerCore.dll
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\refint\ServerCore.dll
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ServerCore.pdb
+c:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\ServerCore\obj\Debug\net8.0\ref\ServerCore.dll
