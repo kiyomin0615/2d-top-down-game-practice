@@ -7,15 +7,82 @@ using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour
 {
     public Grid grid;
-
     Vector3Int cellPos = Vector3Int.zero;
 
-    MoveDirection moveDir = MoveDirection.None;
     float speed = 5.0f;
+
+    Animator animator;
+    private MoveDirection moveDir = MoveDirection.Down;
+    public MoveDirection MoveDir
+    {
+        get
+        {
+            return moveDir;
+        }
+        set
+        {
+            if (isMoving)
+                return;
+
+            if (moveDir == value)
+                return;
+
+            switch (value)
+            {
+                case MoveDirection.Up:
+                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    animator.Play("PlayerMoveBack");
+                    break;
+                case MoveDirection.Down:
+                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    animator.Play("PlayerMoveFront");
+                    break;
+                case MoveDirection.Left:
+                    transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                    animator.Play("PlayerMoveRight");
+                    break;
+                case MoveDirection.Right:
+                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    animator.Play("PlayerMoveRight");
+                    break;
+                case MoveDirection.None:
+                    if (moveDir == MoveDirection.Up)
+                    {
+                        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        animator.Play("PlayerIdleBack");
+                    }
+                    else if (moveDir == MoveDirection.Down)
+                    {
+                        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        animator.Play("PlayerIdleFront");
+                    }
+                    else if (moveDir == MoveDirection.Left)
+                    {
+                        transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+                        animator.Play("PlayerIdleRight");
+                    }
+                    else if (moveDir == MoveDirection.Right)
+                    {
+                        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        animator.Play("PlayerIdleRight");
+                    }
+                    else
+                    {
+                        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        animator.Play("PlayerIdleFront");
+                    }
+                    break;
+            }
+
+            moveDir = value;
+        }
+    }
+
     bool isMoving = false;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         transform.position = grid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
     }
 
@@ -30,23 +97,23 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            moveDir = MoveDirection.Up;
+            MoveDir = MoveDirection.Up;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            moveDir = MoveDirection.Down;
+            MoveDir = MoveDirection.Down;
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            moveDir = MoveDirection.Left;
+            MoveDir = MoveDirection.Left;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            moveDir = MoveDirection.Right;
+            MoveDir = MoveDirection.Right;
         }
         else
         {
-            moveDir = MoveDirection.None;
+            MoveDir = MoveDirection.None;
         }
     }
 
@@ -54,7 +121,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!isMoving)
         {
-            switch (moveDir)
+            switch (MoveDir)
             {
                 case MoveDirection.Up:
                     cellPos += Vector3Int.up;
