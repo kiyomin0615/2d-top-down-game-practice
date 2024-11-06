@@ -2,86 +2,99 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    float speed = 10.0f;
+    public Grid grid;
 
-    Vector3 destPosition;
+    Vector3Int cellPos = Vector3Int.zero;
 
-    enum PlayerState
-    {
-        Idle,
-        Moving,
-        Dead
-    }
-
-    PlayerState state = PlayerState.Idle;
+    MoveDirection moveDir = MoveDirection.None;
+    float speed = 5.0f;
+    bool isMoving = false;
 
     void Start()
     {
-        // subscribe
-        Manager.Input.MouseAction -= OnMouseInput;
-        Manager.Input.MouseAction += OnMouseInput;
+        transform.position = grid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
     }
 
     void Update()
     {
-        // state pattern
-        switch (state)
+        GetUserInput();
+        SetPlayerPosition();
+        Move();
+    }
+
+    void GetUserInput()
+    {
+        if (Input.GetKey(KeyCode.W))
         {
-            case PlayerState.Idle:
-                UpdateIdle();
-                break;
-            case PlayerState.Moving:
-                UpdateMoving();
-                break;
-            case PlayerState.Dead:
-                UpdateDead();
-                break;
+            moveDir = MoveDirection.Up;
         }
-    }
-
-    void UpdateIdle()
-    {
-        Animator animator = GetComponent<Animator>();
-        animator.SetFloat("speed", 0.0f);
-    }
-
-    void UpdateMoving()
-    {
-        Vector3 dir = destPosition - transform.position;
-
-        if (dir.magnitude < 0.00001f)
+        else if (Input.GetKey(KeyCode.S))
         {
-            state = PlayerState.Idle;
+            moveDir = MoveDirection.Down;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            moveDir = MoveDirection.Left;
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            moveDir = MoveDirection.Right;
         }
         else
         {
-            float moveDistance = Mathf.Clamp(speed * Time.deltaTime, 0, dir.magnitude);
-            transform.position += dir.normalized * moveDistance;
-            // transform.LookAt(destPosition);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
+            moveDir = MoveDirection.None;
         }
-
-        Animator animator = GetComponent<Animator>();
-        animator.SetFloat("speed", speed);
     }
 
-    void UpdateDead() { }
-
-    void OnMouseInput(Definition.MouseEvent mouseEvent)
+    void SetPlayerPosition()
     {
-        RaycastHit hitInfo;
-        int layerMask = LayerMask.GetMask("Wall");
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
-        if (Physics.Raycast(ray, out hitInfo, 100.0f, layerMask))
+        if (!isMoving)
         {
-            destPosition = hitInfo.point;
-            state = PlayerState.Moving;
+            switch (moveDir)
+            {
+                case MoveDirection.Up:
+                    cellPos += Vector3Int.up;
+                    isMoving = true;
+                    break;
+                case MoveDirection.Down:
+                    cellPos += Vector3Int.down;
+                    isMoving = true;
+                    break;
+                case MoveDirection.Left:
+                    cellPos += Vector3Int.left;
+                    isMoving = true;
+                    break;
+                case MoveDirection.Right:
+                    cellPos += Vector3Int.right;
+                    isMoving = true;
+                    break;
+            }
+        }
+    }
+
+    void Move()
+    {
+        if (!isMoving)
+            return;
+
+        Vector3 destination = grid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
+        Vector3 dir = destination - transform.position;
+
+        float dist = dir.magnitude;
+
+        if (dist < 0.1f)
+        {
+            transform.position = destination;
+            isMoving = false;
+        }
+        else
+        {
+            transform.position += dir.normalized * speed * Time.deltaTime;
+            isMoving = true;
         }
     }
 }
