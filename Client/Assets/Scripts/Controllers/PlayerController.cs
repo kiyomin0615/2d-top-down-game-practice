@@ -6,7 +6,84 @@ using static Definition;
 
 public class PlayerController : EntityController
 {
+    bool isSimpleAttack = true;
+
     Coroutine coSkill;
+
+    protected override void UpdateAnimation()
+    {
+        if (State == EntityState.Idle)
+        {
+            switch (lastMoveDir)
+            {
+                case Direction.Up:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerIdleBack");
+                    break;
+                case Direction.Down:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerIdleFront");
+                    break;
+                case Direction.Left:
+                    spriteRenderer.flipX = true;
+                    animator.Play("PlayerIdleRight");
+                    break;
+                case Direction.Right:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerIdleRight");
+                    break;
+            }
+        }
+        else if (State == EntityState.Move)
+        {
+            switch (MoveDir)
+            {
+                case Direction.Up:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerMoveBack");
+                    break;
+                case Direction.Down:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerMoveFront");
+                    break;
+                case Direction.Left:
+                    spriteRenderer.flipX = true;
+                    animator.Play("PlayerMoveRight");
+                    break;
+                case Direction.Right:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerMoveRight");
+                    break;
+            }
+        }
+        else if (State == EntityState.Skill)
+        {
+            switch (lastMoveDir)
+            {
+                case Direction.Up:
+                    spriteRenderer.flipX = false;
+                    animator.Play(isSimpleAttack ? "PlayerAttackBack" : "PlayerAttackBackWeapon");
+                    break;
+                case Direction.Down:
+                    spriteRenderer.flipX = false;
+                    animator.Play(isSimpleAttack ? "PlayerAttackFront" : "PlayerAttackFrontWeapon");
+                    break;
+                case Direction.Left:
+                    spriteRenderer.flipX = true;
+                    animator.Play(isSimpleAttack ? "PlayerAttackRight" : "PlayerAttackRightWeapon");
+                    break;
+                case Direction.Right:
+                    spriteRenderer.flipX = false;
+                    animator.Play(isSimpleAttack ? "PlayerAttackRight" : "PlayerAttackRightWeapon");
+                    break;
+            }
+        }
+        else if (State == EntityState.Die)
+        {
+            // TODO
+        }
+    }
+
 
     protected override void Init()
     {
@@ -63,7 +140,7 @@ public class PlayerController : EntityController
         if (Input.GetKey(KeyCode.F))
         {
             State = EntityState.Skill;
-            coSkill = StartCoroutine("CoAttackPunch");
+            coSkill = StartCoroutine("CoShootArrow");
         }
     }
 
@@ -76,7 +153,23 @@ public class PlayerController : EntityController
             Debug.Log($"{target.name} got damage.");
         }
 
-        yield return new WaitForSeconds(0.5f);
+        isSimpleAttack = true;
+
+        yield return new WaitForSeconds(0.3f);
+        State = EntityState.Idle;
+        coSkill = null;
+    }
+
+    IEnumerator CoShootArrow()
+    {
+        GameObject arrow = Manager.Resource.Instantiate("Entity/Arrow");
+        ArrowController arrowController = arrow.GetComponent<ArrowController>();
+        arrowController.MoveDir = lastMoveDir;
+        arrowController.CellPos = CellPos;
+
+        isSimpleAttack = false;
+
+        yield return new WaitForSeconds(0.3f);
         State = EntityState.Idle;
         coSkill = null;
     }

@@ -27,7 +27,7 @@ public class EntityController : MonoBehaviour
         }
     }
 
-    private Direction lastMoveDir;
+    protected Direction lastMoveDir;
     private Direction moveDir = Direction.Down;
     public Direction MoveDir
     {
@@ -45,33 +45,12 @@ public class EntityController : MonoBehaviour
 
             moveDir = value;
             if (value != Direction.None)
+            {
                 lastMoveDir = value;
+            }
 
             UpdateAnimation();
         }
-    }
-
-    public Vector3Int GetForwardCellPos()
-    {
-        Vector3Int cellPos = CellPos;
-
-        switch (lastMoveDir)
-        {
-            case Direction.Up:
-                cellPos += Vector3Int.up;
-                break;
-            case Direction.Down:
-                cellPos += Vector3Int.down;
-                break;
-            case Direction.Left:
-                cellPos += Vector3Int.left;
-                break;
-            case Direction.Right:
-                cellPos += Vector3Int.right;
-                break;
-        }
-
-        return cellPos;
     }
 
     protected virtual void UpdateAnimation()
@@ -252,5 +231,28 @@ public class EntityController : MonoBehaviour
     protected virtual void UpdateDieState()
     {
 
+    }
+
+    public Vector3Int GetForwardCellPos()
+    {
+        Vector3Int cellPos = CellPos;
+
+        switch (lastMoveDir)
+        {
+            case Direction.Up:
+                cellPos += Vector3Int.up;
+                break;
+            case Direction.Down:
+                cellPos += Vector3Int.down;
+                break;
+            case Direction.Left:
+                cellPos += Vector3Int.left;
+                break;
+            case Direction.Right:
+                cellPos += Vector3Int.right;
+                break;
+        }
+
+        return cellPos;
     }
 }
