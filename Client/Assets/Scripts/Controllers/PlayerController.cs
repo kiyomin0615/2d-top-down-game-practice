@@ -6,6 +6,8 @@ using static Definition;
 
 public class PlayerController : EntityController
 {
+    Coroutine coSkill;
+
     protected override void Init()
     {
         base.Init();
@@ -13,7 +15,17 @@ public class PlayerController : EntityController
 
     protected override void UpdateController()
     {
-        GetUserInput();
+        switch (State)
+        {
+            case EntityState.Idle:
+                GetMoveInput();
+                GetSkillInput();
+                break;
+            case EntityState.Move:
+                GetMoveInput();
+                break;
+        }
+
         base.UpdateController();
     }
 
@@ -22,7 +34,7 @@ public class PlayerController : EntityController
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
     }
 
-    void GetUserInput()
+    void GetMoveInput()
     {
         if (Input.GetKey(KeyCode.W))
         {
@@ -44,5 +56,28 @@ public class PlayerController : EntityController
         {
             MoveDir = Direction.None;
         }
+    }
+
+    void GetSkillInput()
+    {
+        if (Input.GetKey(KeyCode.F))
+        {
+            State = EntityState.Skill;
+            coSkill = StartCoroutine("CoAttackPunch");
+        }
+    }
+
+    IEnumerator CoAttackPunch()
+    {
+        GameObject target = Manager.Object.FindEntityOnMap(GetForwardCellPos());
+        if (target != null)
+        {
+            // TODO
+            Debug.Log($"{target.name} got damage.");
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        State = EntityState.Idle;
+        coSkill = null;
     }
 }

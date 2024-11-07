@@ -51,6 +51,29 @@ public class EntityController : MonoBehaviour
         }
     }
 
+    public Vector3Int GetForwardCellPos()
+    {
+        Vector3Int cellPos = CellPos;
+
+        switch (lastMoveDir)
+        {
+            case Direction.Up:
+                cellPos += Vector3Int.up;
+                break;
+            case Direction.Down:
+                cellPos += Vector3Int.down;
+                break;
+            case Direction.Left:
+                cellPos += Vector3Int.left;
+                break;
+            case Direction.Right:
+                cellPos += Vector3Int.right;
+                break;
+        }
+
+        return cellPos;
+    }
+
     protected virtual void UpdateAnimation()
     {
         if (State == EntityState.Idle)
@@ -100,6 +123,25 @@ public class EntityController : MonoBehaviour
         else if (State == EntityState.Skill)
         {
             // TODO
+            switch (lastMoveDir)
+            {
+                case Direction.Up:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerAttackBack");
+                    break;
+                case Direction.Down:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerAttackFront");
+                    break;
+                case Direction.Left:
+                    spriteRenderer.flipX = true;
+                    animator.Play("PlayerAttackRight");
+                    break;
+                case Direction.Right:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerAttackRight");
+                    break;
+            }
         }
         else if (State == EntityState.Die)
         {
@@ -127,13 +169,27 @@ public class EntityController : MonoBehaviour
 
     protected virtual void UpdateController()
     {
-        SetPosition();
-        Move();
+        switch (State)
+        {
+            case EntityState.Idle:
+                UpdateIdleState();
+                break;
+            case EntityState.Move:
+                UpdateMoveState();
+                break;
+            case EntityState.Skill:
+                UpdateSkillState();
+                break;
+            case EntityState.Die:
+                UpdateDieState();
+                break;
+        }
     }
 
-    void SetPosition()
+    protected virtual void UpdateIdleState()
     {
-        if (State == EntityState.Idle && MoveDir != Direction.None)
+        // Move
+        if (MoveDir != Direction.None)
         {
             Vector3Int destPos = CellPos;
 
@@ -165,11 +221,8 @@ public class EntityController : MonoBehaviour
         }
     }
 
-    void Move()
+    protected virtual void UpdateMoveState()
     {
-        if (State != EntityState.Move)
-            return;
-
         Vector3 destination = Manager.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
         Vector3 dir = destination - transform.position;
 
@@ -189,5 +242,15 @@ public class EntityController : MonoBehaviour
             transform.position += dir.normalized * speed * Time.deltaTime;
             State = EntityState.Move;
         }
+    }
+
+    protected virtual void UpdateSkillState()
+    {
+
+    }
+
+    protected virtual void UpdateDieState()
+    {
+
     }
 }
