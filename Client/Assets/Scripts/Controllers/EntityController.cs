@@ -22,12 +22,14 @@ public class EntityController : MonoBehaviour
                 return;
 
             state = value;
+
+            UpdateAnimation();
         }
     }
 
-    private MoveDirection lastMoveDir;
-    private MoveDirection moveDir = MoveDirection.Down;
-    public MoveDirection MoveDir
+    private Direction lastMoveDir;
+    private Direction moveDir = Direction.Down;
+    public Direction MoveDir
     {
         get
         {
@@ -41,67 +43,67 @@ public class EntityController : MonoBehaviour
             if (moveDir == value)
                 return;
 
-            switch (value)
-            {
-                case MoveDirection.Up:
-                    spriteRenderer.flipX = false;
-                    animator.Play("PlayerMoveBack");
-                    break;
-                case MoveDirection.Down:
-                    spriteRenderer.flipX = false;
-                    animator.Play("PlayerMoveFront");
-                    break;
-                case MoveDirection.Left:
-                    spriteRenderer.flipX = true;
-                    animator.Play("PlayerMoveRight");
-                    break;
-                case MoveDirection.Right:
-                    spriteRenderer.flipX = false;
-                    animator.Play("PlayerMoveRight");
-                    break;
-            }
-
             moveDir = value;
-            if (value != MoveDirection.None)
+            if (value != Direction.None)
                 lastMoveDir = value;
+
+            UpdateAnimation();
         }
     }
 
     protected virtual void UpdateAnimation()
     {
-        if (state == EntityState.Idle)
+        if (State == EntityState.Idle)
         {
             switch (lastMoveDir)
             {
-                case MoveDirection.Up:
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                case Direction.Up:
+                    spriteRenderer.flipX = false;
                     animator.Play("PlayerIdleBack");
                     break;
-                case MoveDirection.Down:
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                case Direction.Down:
+                    spriteRenderer.flipX = false;
                     animator.Play("PlayerIdleFront");
                     break;
-                case MoveDirection.Right:
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                case Direction.Left:
+                    spriteRenderer.flipX = true;
                     animator.Play("PlayerIdleRight");
                     break;
-                case MoveDirection.Left:
-                    transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-                    animator.Play("PlayerIdleFront");
+                case Direction.Right:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerIdleRight");
                     break;
             }
         }
-        else if (state == EntityState.Move)
+        else if (State == EntityState.Move)
         {
-
+            switch (MoveDir)
+            {
+                case Direction.Up:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerMoveBack");
+                    break;
+                case Direction.Down:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerMoveFront");
+                    break;
+                case Direction.Left:
+                    spriteRenderer.flipX = true;
+                    animator.Play("PlayerMoveRight");
+                    break;
+                case Direction.Right:
+                    spriteRenderer.flipX = false;
+                    animator.Play("PlayerMoveRight");
+                    break;
+            }
         }
-        else if (state == EntityState.Skill)
+        else if (State == EntityState.Skill)
         {
-
+            // TODO
         }
-        else if (state == EntityState.Die)
+        else if (State == EntityState.Die)
         {
-
+            // TODO
         }
     }
 
@@ -130,22 +132,22 @@ public class EntityController : MonoBehaviour
 
     void SetPosition()
     {
-        if (State == EntityState.Idle && MoveDir != MoveDirection.None)
+        if (State == EntityState.Idle && MoveDir != Direction.None)
         {
             Vector3Int destPos = cellPos;
 
             switch (MoveDir)
             {
-                case MoveDirection.Up:
+                case Direction.Up:
                     destPos += Vector3Int.up;
                     break;
-                case MoveDirection.Down:
+                case Direction.Down:
                     destPos += Vector3Int.down;
                     break;
-                case MoveDirection.Left:
+                case Direction.Left:
                     destPos += Vector3Int.left;
                     break;
-                case MoveDirection.Right:
+                case Direction.Right:
                     destPos += Vector3Int.right;
                     break;
             }
@@ -171,7 +173,11 @@ public class EntityController : MonoBehaviour
         if (dist < 0.1f)
         {
             transform.position = destination;
-            State = EntityState.Idle;
+
+            // 수동으로 애니메이션 컨트롤
+            state = EntityState.Idle;
+            if (MoveDir == Direction.None)
+                UpdateAnimation();
         }
         else
         {

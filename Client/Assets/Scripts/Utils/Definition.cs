@@ -12,7 +12,7 @@ public class Definition
         Die,
     }
 
-    public enum MoveDirection
+    public enum Direction
     {
         None,
         Up,

@@ -26,23 +26,23 @@ public class PlayerController : EntityController
     {
         if (Input.GetKey(KeyCode.W))
         {
-            MoveDir = MoveDirection.Up;
+            MoveDir = Direction.Up;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            MoveDir = MoveDirection.Down;
+            MoveDir = Direction.Down;
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            MoveDir = MoveDirection.Left;
+            MoveDir = Direction.Left;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            MoveDir = MoveDirection.Right;
+            MoveDir = Direction.Right;
         }
         else
         {
-            MoveDir = MoveDirection.None;
+            MoveDir = Direction.None;
         }
     }
 }
