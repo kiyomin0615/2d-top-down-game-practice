@@ -121,6 +121,7 @@ public class EntityController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
         transform.position = Manager.Map.CurrentGrid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
     }
 

@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class MapManager : MonoBehaviour
+public class MapManager
 {
     public Grid CurrentGrid { get; private set; }
 

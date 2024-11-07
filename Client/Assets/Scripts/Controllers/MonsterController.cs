@@ -9,6 +9,9 @@ public class MonsterController : EntityController
     protected override void Init()
     {
         base.Init();
+
+        State = EntityState.Idle;
+        MoveDir = Direction.None;
     }
 
     protected override void UpdateController()
