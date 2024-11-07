@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    Vector3Int cellPos = Vector3Int.zero;
+    Vector3Int cellPos = new Vector3Int(0, -4);
 
     float speed = 5.0f;
 
@@ -92,6 +92,11 @@ public class PlayerController : MonoBehaviour
         Move();
     }
 
+    void LateUpdate()
+    {
+        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+    }
+
     void GetUserInput()
     {
         if (Input.GetKey(KeyCode.W))
@@ -118,26 +123,30 @@ public class PlayerController : MonoBehaviour
 
     void SetPlayerPosition()
     {
-        if (!isMoving)
+        if (!isMoving && MoveDir != MoveDirection.None)
         {
+            Vector3Int destPos = cellPos;
+
             switch (MoveDir)
             {
                 case MoveDirection.Up:
-                    cellPos += Vector3Int.up;
-                    isMoving = true;
+                    destPos += Vector3Int.up;
                     break;
                 case MoveDirection.Down:
-                    cellPos += Vector3Int.down;
-                    isMoving = true;
+                    destPos += Vector3Int.down;
                     break;
                 case MoveDirection.Left:
-                    cellPos += Vector3Int.left;
-                    isMoving = true;
+                    destPos += Vector3Int.left;
                     break;
                 case MoveDirection.Right:
-                    cellPos += Vector3Int.right;
-                    isMoving = true;
+                    destPos += Vector3Int.right;
                     break;
+            }
+
+            if (Manager.Map.CanGo(destPos))
+            {
+                cellPos = destPos;
+                isMoving = true;
             }
         }
     }

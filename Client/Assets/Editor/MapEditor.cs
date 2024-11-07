@@ -27,13 +27,13 @@ public class MapEditor
             using (var writer = File.CreateText($"Assets/Resources/Map/{map.name}.txt"))
             {
                 writer.WriteLine(tilemapBase.cellBounds.xMin);
-                writer.WriteLine(tilemapBase.cellBounds.xMax);
+                writer.WriteLine(tilemapBase.cellBounds.xMax - 1);
                 writer.WriteLine(tilemapBase.cellBounds.yMin);
-                writer.WriteLine(tilemapBase.cellBounds.yMax);
+                writer.WriteLine(tilemapBase.cellBounds.yMax - 1);
 
-                for (int y = tilemapBase.cellBounds.yMax; y >= tilemapBase.cellBounds.yMin; y--)
+                for (int y = tilemapBase.cellBounds.yMax - 1; y >= tilemapBase.cellBounds.yMin; y--)
                 {
-                    for (int x = tilemapBase.cellBounds.xMin; x <= tilemapBase.cellBounds.xMax; x++)
+                    for (int x = tilemapBase.cellBounds.xMin; x <= tilemapBase.cellBounds.xMax - 1; x++)
                     {
                         TileBase tile = tilemapCollision.GetTile(new Vector3Int(x, y, 0));
                         if (tile != null)
