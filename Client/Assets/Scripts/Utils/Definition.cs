@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Definition
 {
+    public enum EntityState
+    {
+        Idle,
+        Move,
+        Skill,
+        Die,
+    }
+
     public enum MoveDirection
     {
         None,

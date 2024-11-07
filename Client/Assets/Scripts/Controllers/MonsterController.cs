@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Definition;
 
-public class PlayerController : EntityController
+public class MonsterController : EntityController
 {
     protected override void Init()
     {
@@ -13,13 +13,8 @@ public class PlayerController : EntityController
 
     protected override void UpdateController()
     {
-        GetUserInput();
+        // GetUserInput();
         base.UpdateController();
-    }
-
-    void LateUpdate()
-    {
-        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
     }
 
     void GetUserInput()
