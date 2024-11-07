@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    public Grid grid;
     Vector3Int cellPos = Vector3Int.zero;
 
     float speed = 5.0f;
@@ -83,7 +82,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        transform.position = grid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
+        transform.position = Manager.Map.CurrentGrid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
     }
 
     void Update()
@@ -148,7 +147,7 @@ public class PlayerController : MonoBehaviour
         if (!isMoving)
             return;
 
-        Vector3 destination = grid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
+        Vector3 destination = Manager.Map.CurrentGrid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
         Vector3 dir = destination - transform.position;
 
         float dist = dir.magnitude;

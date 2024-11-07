@@ -15,13 +15,13 @@ public class Manager : MonoBehaviour
         }
     }
 
-    // Input Manager
-    private InputManager input = new InputManager();
-    public static InputManager Input
+    // Map Manager
+    private MapManager map = new MapManager();
+    public static MapManager Map
     {
         get
         {
-            return Instance.input;
+            return Instance.map;
         }
     }
 
@@ -90,11 +90,6 @@ public class Manager : MonoBehaviour
         Init();
     }
 
-    void Update()
-    {
-        Input.OnUpdate();
-    }
-
     static void Init()
     {
         if (instance == null)
@@ -116,7 +111,6 @@ public class Manager : MonoBehaviour
 
     public static void Clear()
     {
-        Input.Clear();
         Audio.Clear();
         Scene.Clear();
         UI.Clear();
