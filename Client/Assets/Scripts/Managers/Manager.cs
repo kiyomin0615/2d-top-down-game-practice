@@ -15,6 +15,16 @@ public class Manager : MonoBehaviour
         }
     }
 
+    // Object Manager
+    private ObjectManager objectManager = new ObjectManager();
+    public static ObjectManager Object
+    {
+        get
+        {
+            return Instance.objectManager;
+        }
+    }
+
     // Map Manager
     private MapManager map = new MapManager();
     public static MapManager Map

@@ -7,7 +7,7 @@ public class EntityController : MonoBehaviour
 {
     public float speed = 5.0f;
 
-    protected Vector3Int cellPos = new Vector3Int(0, -4);
+    public Vector3Int CellPos { get; set; } = new Vector3Int(0, -4);
 
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
@@ -122,7 +122,7 @@ public class EntityController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        transform.position = Manager.Map.CurrentGrid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
+        transform.position = Manager.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
     }
 
     protected virtual void UpdateController()
@@ -135,7 +135,7 @@ public class EntityController : MonoBehaviour
     {
         if (State == EntityState.Idle && MoveDir != Direction.None)
         {
-            Vector3Int destPos = cellPos;
+            Vector3Int destPos = CellPos;
 
             switch (MoveDir)
             {
@@ -155,9 +155,13 @@ public class EntityController : MonoBehaviour
 
             if (Manager.Map.CanGo(destPos))
             {
-                cellPos = destPos;
-                State = EntityState.Move;
+                if (Manager.Object.FindEntityOnMap(destPos) == null)
+                {
+                    CellPos = destPos;
+                }
             }
+
+            State = EntityState.Move;
         }
     }
 
@@ -166,7 +170,7 @@ public class EntityController : MonoBehaviour
         if (State != EntityState.Move)
             return;
 
-        Vector3 destination = Manager.Map.CurrentGrid.CellToWorld(cellPos) + new Vector3(0.5f, 0.5f);
+        Vector3 destination = Manager.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
         Vector3 dir = destination - transform.position;
 
         float dist = dir.magnitude;
