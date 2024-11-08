@@ -53,15 +53,21 @@ public class ArrowController : EntityController
 
             if (Manager.Map.CanGo(destPos))
             {
-                GameObject go = Manager.Object.FindEntityOnMap(destPos);
-                if (go == null)
+                GameObject enemy = Manager.Object.FindEntityOnMap(destPos);
+                if (enemy == null)
                 {
                     CellPos = destPos;
                 }
                 else
                 {
-                    // TODO
-                    Debug.Log($"{go.name} got damage.");
+                    GameObject dieEffect = Manager.Resource.Instantiate("Effect/DieEffect");
+                    dieEffect.transform.position = enemy.transform.position;
+                    dieEffect.GetComponent<Animator>().Play("DieEffect");
+                    Manager.Resource.Destroy(dieEffect, 0.5f);
+
+                    Manager.Object.Remove(enemy);
+                    Manager.Resource.Destroy(enemy);
+
                     Manager.Resource.Destroy(gameObject);
                 }
             }
