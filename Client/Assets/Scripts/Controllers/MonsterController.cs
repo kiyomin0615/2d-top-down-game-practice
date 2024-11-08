@@ -67,7 +67,6 @@ public class MonsterController : EntityController
         }
 
         State = EntityState.Idle;
-        coPatrol = null;
     }
 
     public override void MoveToNextPos()
