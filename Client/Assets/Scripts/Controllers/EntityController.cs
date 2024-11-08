@@ -12,8 +12,8 @@ public class EntityController : MonoBehaviour
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
 
-    private EntityState state = EntityState.Idle;
-    public EntityState State
+    protected EntityState state = EntityState.Idle;
+    public virtual EntityState State
     {
         get { return state; }
         set
@@ -175,19 +175,14 @@ public class EntityController : MonoBehaviour
         {
             transform.position = destination;
 
-            // To Idle State
-            if (MoveDir == Direction.None)
-            {
-                State = EntityState.Idle;
-                return;
-            }
+
 
             MoveToNextPos();
         }
         else
         {
             transform.position += dir.normalized * speed * Time.deltaTime;
-            State = EntityState.Move;
+            // State = EntityState.Move;
         }
     }
 
@@ -228,6 +223,13 @@ public class EntityController : MonoBehaviour
 
     public virtual void MoveToNextPos()
     {
+        // To Idle State
+        if (MoveDir == Direction.None)
+        {
+            State = EntityState.Idle;
+            return;
+        }
+
         Vector3Int destPos = CellPos;
 
         switch (MoveDir)
