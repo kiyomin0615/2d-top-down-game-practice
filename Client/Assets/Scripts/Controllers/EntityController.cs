@@ -27,7 +27,7 @@ public class EntityController : MonoBehaviour
         }
     }
 
-    protected Direction lastMoveDir;
+    protected Direction lastMoveDir = Direction.Down;
     private Direction moveDir = Direction.Down;
     public Direction MoveDir
     {
@@ -37,9 +37,6 @@ public class EntityController : MonoBehaviour
         }
         set
         {
-            if (State == EntityState.Move)
-                return;
-
             if (moveDir == value)
                 return;
 
@@ -165,40 +162,7 @@ public class EntityController : MonoBehaviour
         }
     }
 
-    protected virtual void UpdateIdleState()
-    {
-        // Move
-        if (MoveDir != Direction.None)
-        {
-            Vector3Int destPos = CellPos;
-
-            switch (MoveDir)
-            {
-                case Direction.Up:
-                    destPos += Vector3Int.up;
-                    break;
-                case Direction.Down:
-                    destPos += Vector3Int.down;
-                    break;
-                case Direction.Left:
-                    destPos += Vector3Int.left;
-                    break;
-                case Direction.Right:
-                    destPos += Vector3Int.right;
-                    break;
-            }
-
-            if (Manager.Map.CanGo(destPos))
-            {
-                if (Manager.Object.FindEntityOnMap(destPos) == null)
-                {
-                    CellPos = destPos;
-                }
-            }
-
-            State = EntityState.Move;
-        }
-    }
+    protected virtual void UpdateIdleState() { }
 
     protected virtual void UpdateMoveState()
     {
@@ -211,10 +175,14 @@ public class EntityController : MonoBehaviour
         {
             transform.position = destination;
 
-            // 수동으로 애니메이션 컨트롤
-            state = EntityState.Idle;
+            // To Idle State
             if (MoveDir == Direction.None)
-                UpdateAnimation();
+            {
+                State = EntityState.Idle;
+                return;
+            }
+
+            MoveToNextPos();
         }
         else
         {
@@ -257,4 +225,33 @@ public class EntityController : MonoBehaviour
     }
 
     public virtual void OnTakeDamage() { }
+
+    public virtual void MoveToNextPos()
+    {
+        Vector3Int destPos = CellPos;
+
+        switch (MoveDir)
+        {
+            case Direction.Up:
+                destPos += Vector3Int.up;
+                break;
+            case Direction.Down:
+                destPos += Vector3Int.down;
+                break;
+            case Direction.Left:
+                destPos += Vector3Int.left;
+                break;
+            case Direction.Right:
+                destPos += Vector3Int.right;
+                break;
+        }
+
+        if (Manager.Map.CanGo(destPos))
+        {
+            if (Manager.Object.FindEntityOnMap(destPos) == null)
+            {
+                CellPos = destPos;
+            }
+        }
+    }
 }

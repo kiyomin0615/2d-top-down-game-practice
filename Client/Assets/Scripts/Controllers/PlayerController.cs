@@ -84,7 +84,6 @@ public class PlayerController : EntityController
         }
     }
 
-
     protected override void Init()
     {
         base.Init();
@@ -96,7 +95,6 @@ public class PlayerController : EntityController
         {
             case EntityState.Idle:
                 GetMoveInput();
-                GetSkillInput();
                 break;
             case EntityState.Move:
                 GetMoveInput();
@@ -135,8 +133,16 @@ public class PlayerController : EntityController
         }
     }
 
-    void GetSkillInput()
+    protected override void UpdateIdleState()
     {
+        // To Move State
+        if (MoveDir != Direction.None)
+        {
+            State = EntityState.Move;
+            return;
+        }
+
+        // To Skill State
         if (Input.GetKey(KeyCode.F))
         {
             State = EntityState.Skill;

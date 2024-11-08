@@ -9,7 +9,7 @@ public class ArrowController : EntityController
     {
         base.Init();
 
-        switch (MoveDir)
+        switch (lastMoveDir)
         {
             case Direction.Up:
                 transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
@@ -24,55 +24,53 @@ public class ArrowController : EntityController
                 transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, -90f);
                 break;
         }
+
+        speed = 15.0f;
+        State = EntityState.Move;
     }
 
     protected override void UpdateAnimation() { }
 
-    protected override void UpdateIdleState()
+    public override void MoveToNextPos()
     {
-        // Move
-        if (MoveDir != Direction.None)
+        Vector3Int destPos = CellPos;
+
+        switch (MoveDir)
         {
-            Vector3Int destPos = CellPos;
+            case Direction.Up:
+                destPos += Vector3Int.up;
+                break;
+            case Direction.Down:
+                destPos += Vector3Int.down;
+                break;
+            case Direction.Left:
+                destPos += Vector3Int.left;
+                break;
+            case Direction.Right:
+                destPos += Vector3Int.right;
+                break;
+        }
 
-            switch (MoveDir)
+        if (Manager.Map.CanGo(destPos))
+        {
+            GameObject enemy = Manager.Object.FindEntityOnMap(destPos);
+            if (enemy == null)
             {
-                case Direction.Up:
-                    destPos += Vector3Int.up;
-                    break;
-                case Direction.Down:
-                    destPos += Vector3Int.down;
-                    break;
-                case Direction.Left:
-                    destPos += Vector3Int.left;
-                    break;
-                case Direction.Right:
-                    destPos += Vector3Int.right;
-                    break;
-            }
-
-            if (Manager.Map.CanGo(destPos))
-            {
-                GameObject enemy = Manager.Object.FindEntityOnMap(destPos);
-                if (enemy == null)
-                {
-                    CellPos = destPos;
-                }
-                else
-                {
-                    EntityController controller = enemy.GetComponent<EntityController>();
-                    if (controller != null)
-                        controller.OnTakeDamage();
-
-                    Manager.Resource.Destroy(gameObject);
-                }
+                CellPos = destPos;
             }
             else
             {
+                EntityController controller = enemy.GetComponent<EntityController>();
+                if (controller != null)
+                    controller.OnTakeDamage();
+
                 Manager.Resource.Destroy(gameObject);
             }
-
-            State = EntityState.Move;
         }
+        else
+        {
+            Manager.Resource.Destroy(gameObject);
+        }
+
     }
 }
