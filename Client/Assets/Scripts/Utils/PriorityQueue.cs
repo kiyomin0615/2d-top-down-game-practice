@@ -46,10 +46,10 @@ public class PriorityQueue<T> where T : IComparable<T>
 
             int next = now;
 
-            if (heap[next].CompareTo(heap[leftChild]) < 0 && leftChild <= lastIndex)
+            if (leftChild <= lastIndex && heap[next].CompareTo(heap[leftChild]) < 0)
                 next = leftChild;
 
-            if (heap[next].CompareTo(heap[rightChild]) < 0 && rightChild <= lastIndex)
+            if (rightChild <= lastIndex && heap[next].CompareTo(heap[rightChild]) < 0)
                 next = rightChild;
 
             if (next == now)

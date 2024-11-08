@@ -28,7 +28,7 @@ public class EntityController : MonoBehaviour
     }
 
     protected Direction lastMoveDir = Direction.Down;
-    private Direction moveDir = Direction.Down;
+    protected Direction moveDir = Direction.Down;
     public Direction MoveDir
     {
         get

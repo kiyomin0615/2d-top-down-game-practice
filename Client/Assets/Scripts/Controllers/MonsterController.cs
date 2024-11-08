@@ -6,8 +6,14 @@ using static Definition;
 
 public class MonsterController : EntityController
 {
-    Coroutine coPatrol;
     Vector3Int destCellPos;
+
+    Coroutine coPatrol;
+
+    Coroutine coSearchPlayer;
+    GameObject target;
+    float searchRange = 5.0f;
+
 
     public override EntityState State
     {
@@ -24,6 +30,12 @@ public class MonsterController : EntityController
                 StopCoroutine(coPatrol);
                 coPatrol = null;
             }
+
+            if (coSearchPlayer != null)
+            {
+                StopCoroutine(coSearchPlayer);
+                coSearchPlayer = null;
+            }
         }
     }
 
@@ -33,6 +45,7 @@ public class MonsterController : EntityController
 
         State = EntityState.Idle;
         MoveDir = Direction.None;
+        speed = 3.0f;
     }
 
     protected override void UpdateIdleState()
@@ -44,11 +57,17 @@ public class MonsterController : EntityController
         {
             coPatrol = StartCoroutine("CoPatrol");
         }
+
+        // Search Player
+        if (coSearchPlayer == null)
+        {
+            coSearchPlayer = StartCoroutine("CoSearchPlayer");
+        }
     }
 
     IEnumerator CoPatrol()
     {
-        int duration = UnityEngine.Random.Range(1, 5);
+        int duration = UnityEngine.Random.Range(1, 4);
         yield return new WaitForSeconds(duration);
 
         // try 10 times
@@ -69,10 +88,49 @@ public class MonsterController : EntityController
         State = EntityState.Idle;
     }
 
+    IEnumerator CoSearchPlayer()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+
+            if (target != null)
+                continue;
+
+            target = Manager.Object.FindEntityOnMap((GameObject go) =>
+            {
+                PlayerController playerController = go.GetComponent<PlayerController>();
+                if (playerController == null)
+                    return false;
+
+                Vector3Int dir = playerController.CellPos - CellPos;
+                if (dir.magnitude > searchRange)
+                    return false;
+
+                return true;
+            });
+        }
+    }
+
     public override void MoveToNextPos()
     {
-        // TODO : path-finding algorithm
-        Vector3Int dir = destCellPos - CellPos;
+        Vector3Int destCellPos = this.destCellPos;
+
+        if (target != null)
+        {
+            destCellPos = target.GetComponent<PlayerController>().CellPos;
+        }
+
+        List<Vector3Int> path = Manager.Map.FindPath(CellPos, destCellPos, ignoreDestCellCollision: true);
+        if (path.Count < 2 || (target != null && path.Count > searchRange))
+        {
+            target = null;
+            State = EntityState.Idle;
+            return;
+        }
+
+        Vector3Int nextCellPos = path[1];
+        Vector3Int dir = nextCellPos - CellPos;
 
         if (dir.x > 0)
             MoveDir = Direction.Right;
@@ -85,27 +143,9 @@ public class MonsterController : EntityController
         else
             MoveDir = Direction.None;
 
-        Vector3Int destPos = CellPos;
-
-        switch (MoveDir)
+        if (Manager.Map.CanGo(nextCellPos) && Manager.Object.FindEntityOnMap(nextCellPos) == null)
         {
-            case Direction.Up:
-                destPos += Vector3Int.up;
-                break;
-            case Direction.Down:
-                destPos += Vector3Int.down;
-                break;
-            case Direction.Left:
-                destPos += Vector3Int.left;
-                break;
-            case Direction.Right:
-                destPos += Vector3Int.right;
-                break;
-        }
-
-        if (Manager.Map.CanGo(destPos) && Manager.Object.FindEntityOnMap(destPos) == null)
-        {
-            CellPos = destPos;
+            CellPos = nextCellPos;
         }
         else
         {

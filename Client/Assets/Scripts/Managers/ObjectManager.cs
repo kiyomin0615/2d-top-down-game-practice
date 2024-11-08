@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,17 @@ public class ObjectManager
                 continue;
 
             if (entity.CellPos == cellPos)
+                return go;
+        }
+
+        return null;
+    }
+
+    public GameObject FindEntityOnMap(Func<GameObject, bool> func)
+    {
+        foreach (GameObject go in objects)
+        {
+            if (func.Invoke(go))
                 return go;
         }
 
