@@ -60,13 +60,9 @@ public class ArrowController : EntityController
                 }
                 else
                 {
-                    GameObject dieEffect = Manager.Resource.Instantiate("Effect/DieEffect");
-                    dieEffect.transform.position = enemy.transform.position;
-                    dieEffect.GetComponent<Animator>().Play("DieEffect");
-                    Manager.Resource.Destroy(dieEffect, 0.5f);
-
-                    Manager.Object.Remove(enemy);
-                    Manager.Resource.Destroy(enemy);
+                    EntityController controller = enemy.GetComponent<EntityController>();
+                    if (controller != null)
+                        controller.OnTakeDamage();
 
                     Manager.Resource.Destroy(gameObject);
                 }

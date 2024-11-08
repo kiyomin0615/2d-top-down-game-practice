@@ -140,6 +140,11 @@ public class PlayerController : EntityController
         if (Input.GetKey(KeyCode.F))
         {
             State = EntityState.Skill;
+            coSkill = StartCoroutine("CoAttackPunch");
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            State = EntityState.Skill;
             coSkill = StartCoroutine("CoShootArrow");
         }
     }
@@ -149,8 +154,9 @@ public class PlayerController : EntityController
         GameObject target = Manager.Object.FindEntityOnMap(GetForwardCellPos());
         if (target != null)
         {
-            // TODO
-            Debug.Log($"{target.name} got damage.");
+            EntityController controller = target.GetComponent<EntityController>();
+            if (controller != null)
+                controller.OnTakeDamage();
         }
 
         isSimpleAttack = true;
@@ -172,5 +178,10 @@ public class PlayerController : EntityController
         yield return new WaitForSeconds(0.3f);
         State = EntityState.Idle;
         coSkill = null;
+    }
+
+    public override void OnTakeDamage()
+    {
+
     }
 }

@@ -255,4 +255,6 @@ public class EntityController : MonoBehaviour
 
         return cellPos;
     }
+
+    public virtual void OnTakeDamage() { }
 }
