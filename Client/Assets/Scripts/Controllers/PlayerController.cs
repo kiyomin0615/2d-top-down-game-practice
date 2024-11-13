@@ -188,6 +188,6 @@ public class PlayerController : EntityController
 
     public override void OnTakeDamage()
     {
-
+        Debug.Log("PLAYER HIT!");
     }
 }

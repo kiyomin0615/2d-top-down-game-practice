@@ -12,7 +12,11 @@ public class MonsterController : EntityController
 
     Coroutine coSearchPlayer;
     GameObject target;
-    float searchRange = 5.0f;
+    [SerializeField] float searchRange = 20.0f;
+
+    [SerializeField] bool isSimpleAttack = true;
+    Coroutine coSkill;
+    [SerializeField] float skillRange = 1.0f;
 
 
     public override EntityState State
@@ -46,6 +50,15 @@ public class MonsterController : EntityController
         State = EntityState.Idle;
         MoveDir = Direction.None;
         speed = 3.0f;
+        isSimpleAttack = UnityEngine.Random.Range(0f, 1f) < 0.5f ? true : false;
+        if (isSimpleAttack)
+        {
+            skillRange = 1.0f;
+        }
+        else
+        {
+            skillRange = 20.0f;
+        }
     }
 
     protected override void UpdateIdleState()
@@ -119,6 +132,23 @@ public class MonsterController : EntityController
         if (target != null)
         {
             destCellPos = target.GetComponent<PlayerController>().CellPos;
+
+            Vector3Int targetDir = destCellPos - CellPos;
+            if (targetDir.magnitude <= skillRange && (targetDir.x == 0 || targetDir.y == 0))
+            {
+                MoveDir = GetDirectionOfTargetCell(targetDir);
+                State = EntityState.Skill;
+
+                if (isSimpleAttack)
+                {
+                    coSkill = StartCoroutine("CoAttackPunch");
+                }
+                else
+                {
+                    coSkill = StartCoroutine("CoShootArrow");
+                }
+                return;
+            }
         }
 
         List<Vector3Int> path = Manager.Map.FindPath(CellPos, destCellPos, ignoreDestCellCollision: true);
@@ -132,16 +162,7 @@ public class MonsterController : EntityController
         Vector3Int nextCellPos = path[1];
         Vector3Int dir = nextCellPos - CellPos;
 
-        if (dir.x > 0)
-            MoveDir = Direction.Right;
-        else if (dir.x < 0)
-            MoveDir = Direction.Left;
-        else if (dir.y > 0)
-            MoveDir = Direction.Up;
-        else if (dir.y < 0)
-            MoveDir = Direction.Down;
-        else
-            MoveDir = Direction.None;
+        MoveDir = GetDirectionOfTargetCell(dir);
 
         if (Manager.Map.CanGo(nextCellPos) && Manager.Object.FindEntityOnMap(nextCellPos) == null)
         {
@@ -152,6 +173,37 @@ public class MonsterController : EntityController
             // To Idle State
             State = EntityState.Idle;
         }
+    }
+
+    IEnumerator CoAttackPunch()
+    {
+        GameObject target = Manager.Object.FindEntityOnMap(GetForwardCellPos());
+        if (target != null)
+        {
+            EntityController controller = target.GetComponent<EntityController>();
+            if (controller != null)
+                controller.OnTakeDamage();
+        }
+
+        isSimpleAttack = true;
+
+        yield return new WaitForSeconds(0.3f);
+        State = EntityState.Move;
+        coSkill = null;
+    }
+
+    IEnumerator CoShootArrow()
+    {
+        GameObject arrow = Manager.Resource.Instantiate("Entity/Arrow");
+        ArrowController arrowController = arrow.GetComponent<ArrowController>();
+        arrowController.MoveDir = lastMoveDir;
+        arrowController.CellPos = CellPos;
+
+        isSimpleAttack = false;
+
+        yield return new WaitForSeconds(0.3f);
+        State = EntityState.Move;
+        coSkill = null;
     }
 
     public override void OnTakeDamage()

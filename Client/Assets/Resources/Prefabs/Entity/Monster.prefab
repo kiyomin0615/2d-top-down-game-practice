@@ -99,6 +99,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  searchRange: 10
+  skillRange: 10
 --- !u!95 &4509803393709212364
 Animator:
   serializedVersion: 5

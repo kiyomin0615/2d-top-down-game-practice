@@ -175,8 +175,6 @@ public class EntityController : MonoBehaviour
         {
             transform.position = destination;
 
-
-
             MoveToNextPos();
         }
         else
@@ -217,6 +215,20 @@ public class EntityController : MonoBehaviour
         }
 
         return cellPos;
+    }
+
+    public Direction GetDirectionOfTargetCell(Vector3Int targetCellDir)
+    {
+        if (targetCellDir.x > 0)
+            return Direction.Right;
+        else if (targetCellDir.x < 0)
+            return Direction.Left;
+        else if (targetCellDir.y > 0)
+            return Direction.Up;
+        else if (targetCellDir.y < 0)
+            return Direction.Down;
+        else
+            return Direction.None;
     }
 
     public virtual void OnTakeDamage() { }
