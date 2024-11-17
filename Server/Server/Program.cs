@@ -6,11 +6,9 @@ namespace Server
     class Program
     {
         static Listener listener = new Listener();
-        public static GameRoom GameRoom = new GameRoom();
 
         static void FlushGameRoomPackets()
         {
-            GameRoom.PushAction(() => GameRoom.FlushPackets());
             JobTimer.Instance.Push(FlushGameRoomPackets, 250);
         }
 

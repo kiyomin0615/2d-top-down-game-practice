@@ -1,218 +1,77 @@
-﻿using System;
+﻿
+using System;
+using System.IO;
+using System.Reflection;
 using System.Xml;
 
 namespace PacketGenerator
 {
 	class Program
 	{
-		static string packetContent;
-
-		static ushort packetId;
-		static string packetEnums;
-
-		static string clientManagerRegister;
-		static string serverManagerRegister;
+		static string clientRegister;
+		static string serverRegister;
 
 		static void Main(string[] args)
 		{
-			string basePath = AppDomain.CurrentDomain.BaseDirectory;
-			string xmlPath = Path.Combine(basePath, "../PDL.xml");
+			string file = "../../../Common/protoc-3.12.3-win64/bin/Protocol.proto";
+			if (args.Length >= 1)
+				file = args[0];
 
-			XmlReaderSettings settings = new XmlReaderSettings()
+			bool startParsing = false;
+			foreach (string line in File.ReadAllLines(file))
 			{
-				IgnoreComments = true,
-				IgnoreWhitespace = true,
-			};
-
-			if (args.Length > 0)
-			{
-				xmlPath = args[0];
-			}
-
-			using (XmlReader reader = XmlReader.Create(xmlPath, settings))
-			{
-				reader.MoveToContent();
-				while (reader.Read())
+				if (!startParsing && line.Contains("enum MsgId"))
 				{
-					if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
-						ParsePacket(reader);
+					startParsing = true;
+					continue;
 				}
 
-				string packetText = string.Format(PacketFormat.fileFormat, packetEnums, packetContent);
-				File.WriteAllText("NewPacket.cs", packetText);
+				if (!startParsing)
+					continue;
 
-				string clientPacketManagerText = string.Format(PacketFormat.managerFormat, clientManagerRegister);
-				File.WriteAllText("ClientPacketManager.cs", clientPacketManagerText);
-				string serverPacketManagerText = string.Format(PacketFormat.managerFormat, serverManagerRegister);
-				File.WriteAllText("ServerPacketManager.cs", serverPacketManagerText);
-			}
-		}
-
-		public static void ParsePacket(XmlReader reader)
-		{
-			if (reader.NodeType == XmlNodeType.EndElement)
-				return;
-
-			if (reader.Name.ToLower() != "packet")
-				return;
-
-			string packetName = reader["name"];
-			if (String.IsNullOrEmpty(packetName))
-			{
-				Console.WriteLine("No Packet Name");
-				return;
-			}
-
-			Tuple<string, string, string> result = ParsePacketContent(reader);
-			packetContent += string.Format(PacketFormat.packetFormat, packetName, result.Item1, result.Item2, result.Item3);
-			packetEnums += string.Format(PacketFormat.packetEnumFormat, packetName, ++packetId) + Environment.NewLine + "\t";
-			if (packetName.StartsWith("S_") || packetName.StartsWith("s_"))
-				clientManagerRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
-			else
-				serverManagerRegister += string.Format(PacketFormat.managerRegisterFormat, packetName) + Environment.NewLine;
-		}
-
-		public static Tuple<string, string, string> ParsePacketContent(XmlReader reader)
-		{
-			string packetName = reader["name"];
-
-			string memberCode = "";
-			string deserializeCode = "";
-			string serializeCode = "";
-
-			int depth = reader.Depth + 1;
-
-			while (reader.Read())
-			{
-				if (reader.Depth != depth)
+				if (line.Contains("}"))
 					break;
 
-				string memberName = reader["name"];
-				if (String.IsNullOrEmpty(memberName))
+				string[] names = line.Trim().Split(" =");
+				if (names.Length == 0)
+					continue;
+
+				string name = names[0];
+				if (name.StartsWith("S_"))
 				{
-					Console.WriteLine("No Member Name");
-					return null;
+					string[] words = name.Split("_");
+
+					string msgName = "";
+					foreach (string word in words)
+						msgName += FirstCharToUpper(word);
+
+					string packetName = $"S_{msgName.Substring(1)}";
+					clientRegister += string.Format(PacketFormat.managerRegisterFormat, msgName, packetName);
 				}
-
-				if (string.IsNullOrEmpty(memberCode) == false)
-					memberCode += Environment.NewLine;
-				if (string.IsNullOrEmpty(deserializeCode) == false)
-					deserializeCode += Environment.NewLine;
-				if (string.IsNullOrEmpty(serializeCode) == false)
-					serializeCode += Environment.NewLine;
-
-				string memberType = reader.Name.ToLower();
-				switch (memberType)
+				else if (name.StartsWith("C_"))
 				{
-					case "byte":
-					case "sbyte":
-						memberCode += string.Format(PacketFormat.memberFormat, memberType, memberName);
-						deserializeCode += string.Format(PacketFormat.deserializeByteFormat, memberName, memberType);
-						serializeCode += string.Format(PacketFormat.serializeByteFormat, memberName, memberType);
-						break;
-					case "bool":
-					case "short":
-					case "ushort":
-					case "int":
-					case "long":
-					case "float":
-					case "double":
-						memberCode += string.Format(PacketFormat.memberFormat, memberType, memberName);
-						deserializeCode += string.Format(PacketFormat.deserializeFormat, memberName, GetDeserializeMethodName(memberType), memberType);
-						serializeCode += string.Format(PacketFormat.serializeFormat, memberName, memberType);
-						break;
-					case "string":
-						memberCode += string.Format(PacketFormat.memberFormat, memberType, memberName);
-						deserializeCode += string.Format(PacketFormat.deserializeStringFormat, memberName);
-						serializeCode += string.Format(PacketFormat.serializeStringFormat, memberName);
-						break;
-					case "list":
-						Tuple<string, string, string> tuple = ParsePacketContentList(reader);
-						memberCode += tuple.Item1;
-						deserializeCode += tuple.Item2;
-						serializeCode += tuple.Item3;
-						break;
-					default:
-						break;
+					string[] words = name.Split("_");
+
+					string msgName = "";
+					foreach (string word in words)
+						msgName += FirstCharToUpper(word);
+
+					string packetName = $"C_{msgName.Substring(1)}";
+					serverRegister += string.Format(PacketFormat.managerRegisterFormat, msgName, packetName);
 				}
 			}
 
-			memberCode = memberCode.Replace("\n", "\n\t");
-			deserializeCode = deserializeCode.Replace("\n", "\n\t\t");
-			serializeCode = serializeCode.Replace("\n", "\n\t\t");
-			return new Tuple<string, string, string>(memberCode, deserializeCode, serializeCode);
+			string clientManagerText = string.Format(PacketFormat.managerFormat, clientRegister);
+			File.WriteAllText("ClientPacketManager.cs", clientManagerText);
+			string serverManagerText = string.Format(PacketFormat.managerFormat, serverRegister);
+			File.WriteAllText("ServerPacketManager.cs", serverManagerText);
 		}
 
-		public static Tuple<string, string, string> ParsePacketContentList(XmlReader reader)
-		{
-			string listName = reader["name"];
-			if (string.IsNullOrEmpty(listName))
-			{
-				Console.WriteLine("No List Name");
-				return null;
-			}
-
-			Tuple<string, string, string> tuple = ParsePacketContent(reader);
-
-			string memberCode = string.Format(
-				PacketFormat.memberListFormat,
-				ReplaceFirstCharacterWithUpperCase(listName),
-				ReplaceFirstCharacterWithLowerCase(listName),
-				tuple.Item1,
-				tuple.Item2,
-				tuple.Item3
-			);
-			string deserializeCode = string.Format(
-				PacketFormat.deserializeListFormat,
-				ReplaceFirstCharacterWithUpperCase(listName),
-				ReplaceFirstCharacterWithLowerCase(listName)
-			);
-			string serializeCode = string.Format(
-				PacketFormat.serializeListFormat,
-				ReplaceFirstCharacterWithUpperCase(listName),
-				ReplaceFirstCharacterWithLowerCase(listName)
-			);
-
-			return new Tuple<string, string, string>(memberCode, deserializeCode, serializeCode);
-		}
-
-		public static string GetDeserializeMethodName(string memberType)
-		{
-			switch (memberType)
-			{
-				case "bool":
-					return "ToBoolean";
-				case "short":
-					return "ToInt16";
-				case "ushort":
-					return "ToUInt16";
-				case "int":
-					return "ToInt32";
-				case "long":
-					return "ToInt64";
-				case "float":
-					return "ToSingle";
-				case "double":
-					return "ToDouble";
-				default:
-					return "";
-			}
-		}
-
-		public static string ReplaceFirstCharacterWithUpperCase(string input)
+		public static string FirstCharToUpper(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 				return "";
-
-			return input[0].ToString().ToUpper() + input.Substring(1);
-		}
-
-		public static string ReplaceFirstCharacterWithLowerCase(string input)
-		{
-			if (string.IsNullOrEmpty(input))
-				return "";
-
-			return input[0].ToString().ToLower() + input.Substring(1);
+			return input[0].ToString().ToUpper() + input.Substring(1).ToLower();
 		}
 	}
 }

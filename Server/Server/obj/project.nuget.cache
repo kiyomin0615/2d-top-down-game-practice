@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "rvGDDyW9IL0=",
+  "dgSpecHash": "JoHshaDHnq0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\moeda\\OneDrive\\Desktop\\CSharp\\game-server-practice\\Server\\Server.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\Server\\Server.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\moeda\\.nuget\\packages\\google.protobuf\\3.28.3\\google.protobuf.3.28.3.nupkg.sha512"
+  ],
   "logs": []
 }

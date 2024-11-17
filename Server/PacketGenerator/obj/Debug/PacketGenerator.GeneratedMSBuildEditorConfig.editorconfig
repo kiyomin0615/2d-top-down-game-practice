@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PacketGenerator
-build_property.ProjectDir = C:\Users\moeda\OneDrive\Desktop\CSharp\game-server-practice\PacketGenerator\
+build_property.ProjectDir = C:\Users\moeda\OneDrive\Desktop\IT\Unity\2d-top-down-game-practice\Server\PacketGenerator\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using ServerCore;
+using Google.Protobuf;
+using Google.Protobuf.Protocol;
 
 public class PacketManager
 {
@@ -8,8 +10,8 @@ public class PacketManager
     static PacketManager instance = new PacketManager();
     public static PacketManager Instance { get { return instance; } }
 
-    Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>> deserializerDict = new Dictionary<ushort, Func<PacketSession, ArraySegment<byte>, IPacket>>();
-    Dictionary<ushort, Action<PacketSession, IPacket>> packetHandlerDict = new Dictionary<ushort, Action<PacketSession, IPacket>>();
+    Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> deserializerDict = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
+    Dictionary<ushort, Action<PacketSession, IMessage>> packetHandlerDict = new Dictionary<ushort, Action<PacketSession, IMessage>>();
 
     public PacketManager()
     {
@@ -19,12 +21,11 @@ public class PacketManager
     public void Register()
     {
         
-        deserializerDict.Add((ushort)PacketID.C_Chat, DeserializePacket<C_Chat>);
-        packetHandlerDict.Add((ushort)PacketID.C_Chat, PacketHandler.HandleC_ChatPacket);
-
+        deserializerDict.Add((ushort)MsgId.CChat, HandlePacket<C_Chat>);
+        packetHandlerDict.Add((ushort)MsgId.CChat, PacketHandler.HandleC_ChatPacket);
     }
 
-    public void ProcessPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> callback = null)
+    public void ProcessPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IMessage> callback = null)
     {
         ushort count = 0;
 
@@ -34,29 +35,26 @@ public class PacketManager
         ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
         count += 2;
 
-        Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
-        if (deserializerDict.TryGetValue(id, out func))
-        {
-            IPacket packet = func.Invoke(session, buffer);
-            if (callback != null)
-                callback.Invoke(session, packet);
-            else
-                HandlePacket(session, packet);
-        }
+        Action<PacketSession, ArraySegment<byte>, ushort> action = null;
+        if (deserializerDict.TryGetValue(id, out action))
+            action.Invoke(session, buffer, id);
     }
 
-    T DeserializePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new()
+    void HandlePacket<T>(PacketSession session, ArraySegment<byte> buffer, ushort id) where T : IMessage, new()
     {
         T packet = new T();
-        packet.Deserialize(buffer);
-
-        return packet;
+        packet.MergeFrom(buffer.Array, buffer.Offset + 4, buffer.Count - 4);
+        Action<PacketSession, IMessage> action = null;
+        if (packetHandlerDict.TryGetValue(id, out action))
+            action.Invoke(session, packet);
     }
 
-    public void HandlePacket(PacketSession session, IPacket packet)
+    public Action<PacketSession, IMessage> GetPacketHandler(ushort id)
     {
-        Action<PacketSession, IPacket> action = null;
-        if (packetHandlerDict.TryGetValue(packet.Protocol, out action))
-            action.Invoke(session, packet);
+        Action<PacketSession, IMessage> action = null;
+        if (packetHandlerDict.TryGetValue(id, out action))
+            return action;
+
+        return null;
     }
 }
