@@ -27,7 +27,7 @@ namespace Server
             Array.Copy(BitConverter.GetBytes(protocolId), 0, sendBuffer, 2, sizeof(ushort));
             Array.Copy(chat.ToByteArray(), 0, sendBuffer, 4, size);
 
-            Console.WriteLine(sendBuffer);
+            Console.WriteLine(sendBuffer.Length);
 
             Send(new ArraySegment<byte>(sendBuffer));
         }
