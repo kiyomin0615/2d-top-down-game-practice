@@ -27,6 +27,8 @@ namespace Server
             Array.Copy(BitConverter.GetBytes(protocolId), 0, sendBuffer, 2, sizeof(ushort));
             Array.Copy(chat.ToByteArray(), 0, sendBuffer, 4, size);
 
+            Console.WriteLine(sendBuffer);
+
             Send(new ArraySegment<byte>(sendBuffer));
         }
 
@@ -39,7 +41,7 @@ namespace Server
 
         public override void OnPacketReceived(ArraySegment<byte> buffer)
         {
-            // PacketManager.Instance.ProcessPacket(this, buffer);
+            PacketManager.Instance.ProcessPacket(this, buffer);
         }
 
         public override void OnSent(int numOfBytes)

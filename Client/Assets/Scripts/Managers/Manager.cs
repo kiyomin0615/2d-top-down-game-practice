@@ -15,6 +15,16 @@ public class Manager : MonoBehaviour
         }
     }
 
+    // Network Manager
+    private NetworkManager network = new NetworkManager();
+    public static NetworkManager Network
+    {
+        get
+        {
+            return Instance.network;
+        }
+    }
+
     // Object Manager
     private ObjectManager objectManager = new ObjectManager();
     public static ObjectManager Object
@@ -100,6 +110,11 @@ public class Manager : MonoBehaviour
         Init();
     }
 
+    void Update()
+    {
+        network.Update();
+    }
+
     static void Init()
     {
         if (instance == null)
@@ -113,6 +128,7 @@ public class Manager : MonoBehaviour
             DontDestroyOnLoad(manager);
             instance = manager.GetComponent<Manager>();
 
+            instance.network.Init();
             instance.audioManager.Init();
             instance.pool.Init();
             instance.data.Init();

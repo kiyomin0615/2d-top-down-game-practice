@@ -20,6 +20,10 @@ message S_Chat {
   string context = 1;
 }
 
+message S_EnterGame {
+  string context = 1;
+}
+
 message Person {
   string name = 1;
   int32 id = 2;  // Unique ID number for this person.

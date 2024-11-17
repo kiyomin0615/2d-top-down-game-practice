@@ -17,20 +17,20 @@ public class GameScene : BaseScene
 
         Manager.Map.LoadMap(1);
 
-        GameObject player = Manager.Resource.Instantiate("Entity/Player");
-        player.name = "Player";
-        Manager.Object.Add(player);
+        // GameObject player = Manager.Resource.Instantiate("Entity/Player");
+        // player.name = "Player";
+        // Manager.Object.Add(player);
 
-        for (int i = 0; i < 5; i++)
-        {
-            GameObject monster = Manager.Resource.Instantiate("Entity/Monster");
-            monster.name = "Monster" + i;
-            Manager.Object.Add(monster);
+        // for (int i = 0; i < 5; i++)
+        // {
+        //     GameObject monster = Manager.Resource.Instantiate("Entity/Monster");
+        //     monster.name = "Monster" + i;
+        //     Manager.Object.Add(monster);
 
-            Vector3Int randomCellPos = new Vector3Int(Random.Range(-10, 10), Random.Range(-10, 10));
-            MonsterController monsterController = monster.GetComponent<MonsterController>();
-            monsterController.CellPos = randomCellPos;
-        }
+        //     Vector3Int randomCellPos = new Vector3Int(Random.Range(-10, 10), Random.Range(-10, 10));
+        //     MonsterController monsterController = monster.GetComponent<MonsterController>();
+        //     monsterController.CellPos = randomCellPos;
+        // }
 
     }
 

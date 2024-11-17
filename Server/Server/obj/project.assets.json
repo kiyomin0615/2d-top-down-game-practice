@@ -69,11 +69,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\Server\\Server.csproj",
+      "projectUniqueName": "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\Server\\Server.csproj",
       "projectName": "Server",
-      "projectPath": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\Server\\Server.csproj",
+      "projectPath": "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\Server\\Server.csproj",
       "packagesPath": "C:\\Users\\moeda\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\Server\\obj\\",
+      "outputPath": "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\moeda\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -88,8 +88,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj": {
-              "projectPath": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj"
+            "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj": {
+              "projectPath": "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj"
             }
           }
         }
