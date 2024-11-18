@@ -12,7 +12,7 @@ public class GameScene : BaseScene
     protected override void Init()
     {
         base.Init();
-
+        
         SceneType = Definition.SceneType.Game;
 
         Manager.Map.LoadMap(1);

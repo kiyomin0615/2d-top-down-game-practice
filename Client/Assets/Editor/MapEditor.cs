@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.IO;
 
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
