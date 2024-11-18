@@ -9,11 +9,9 @@ using ServerCore;
 
 public class PacketHandler
 {
-    public static void HandleC_ChatPacket(PacketSession session, IMessage packet)
+    public static void HandleC_MovePacket(PacketSession session, IMessage packet)
     {
-        S_Chat chatPacket = packet as S_Chat;
+        C_Move movePacket = packet as C_Move;
         ClientSession clientSession = session as ClientSession;
-
-        Console.WriteLine(chatPacket.Context);
     }
 }

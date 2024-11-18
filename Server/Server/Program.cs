@@ -14,6 +14,8 @@ namespace Server
 
         static void Main(string[] args)
         {
+            GameRoomManager.Instance.Add();
+            
             string hostName = Dns.GetHostName(); // 호스트 네임
             IPHostEntry ipInstance = Dns.GetHostEntry(hostName); // ip 관련 인스턴스
             IPAddress ip = ipInstance.AddressList[0]; // ip 주소

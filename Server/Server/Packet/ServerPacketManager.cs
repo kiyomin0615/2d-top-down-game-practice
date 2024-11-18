@@ -21,8 +21,8 @@ public class PacketManager
     public void Register()
     {
         
-        deserializerDict.Add((ushort)MsgId.CChat, HandlePacket<C_Chat>);
-        packetHandlerDict.Add((ushort)MsgId.CChat, PacketHandler.HandleC_ChatPacket);
+        deserializerDict.Add((ushort)MsgId.CMove, HandlePacket<C_Move>);
+        packetHandlerDict.Add((ushort)MsgId.CMove, PacketHandler.HandleC_MovePacket);
     }
 
     public void ProcessPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IMessage> callback = null)

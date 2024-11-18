@@ -21,10 +21,16 @@ public class PacketManager
     public void Register()
     {
         
-        deserializerDict.Add((ushort)MsgId.SChat, HandlePacket<S_Chat>);
-        packetHandlerDict.Add((ushort)MsgId.SChat, PacketHandler.HandleS_ChatPacket);
         deserializerDict.Add((ushort)MsgId.SEnterGame, HandlePacket<S_EnterGame>);
         packetHandlerDict.Add((ushort)MsgId.SEnterGame, PacketHandler.HandleS_EnterGamePacket);
+        deserializerDict.Add((ushort)MsgId.SExitGame, HandlePacket<S_ExitGame>);
+        packetHandlerDict.Add((ushort)MsgId.SExitGame, PacketHandler.HandleS_ExitGamePacket);
+        deserializerDict.Add((ushort)MsgId.SSpawn, HandlePacket<S_Spawn>);
+        packetHandlerDict.Add((ushort)MsgId.SSpawn, PacketHandler.HandleS_SpawnPacket);
+        deserializerDict.Add((ushort)MsgId.SDespawn, HandlePacket<S_Despawn>);
+        packetHandlerDict.Add((ushort)MsgId.SDespawn, PacketHandler.HandleS_DespawnPacket);
+        deserializerDict.Add((ushort)MsgId.SMove, HandlePacket<S_Move>);
+        packetHandlerDict.Add((ushort)MsgId.SMove, PacketHandler.HandleS_MovePacket);
     }
 
     public void ProcessPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IMessage> callback = null)

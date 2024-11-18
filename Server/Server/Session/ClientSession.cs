@@ -2,7 +2,6 @@ using System.Net;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
-using static Google.Protobuf.Protocol.Person.Types;
 
 namespace Server
 {
@@ -17,7 +16,7 @@ namespace Server
 
             ushort size = (ushort)packet.CalculateSize();
             byte[] sendBuffer = new byte[size + 4];
-            Array.Copy(BitConverter.GetBytes(size + 4), 0, sendBuffer, 0, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)(size + 4)), 0, sendBuffer, 0, sizeof(ushort));
             Array.Copy(BitConverter.GetBytes((ushort)msgId), 0, sendBuffer, 2, sizeof(ushort));
             Array.Copy(packet.ToByteArray(), 0, sendBuffer, 4, size);
 
@@ -27,13 +26,6 @@ namespace Server
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"클라이언트({endPoint})와 연결 성공.");
-
-            S_Chat chat = new S_Chat()
-            {
-                Context = "Hello!"
-            };
-
-            this.Send(chat);
         }
 
         public override void OnDisconnected(EndPoint endPoint)
