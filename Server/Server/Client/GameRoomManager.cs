@@ -32,7 +32,7 @@ namespace Server
         {
             lock (lockObject)
             {
-                return roomDict.Remove(roomId)
+                return roomDict.Remove(roomId);
             }
         }
 

@@ -40,6 +40,8 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
+            GameRoomManager.Instance.Find(1).ExitGame(CurrentPlayer.Info.PlayerId);
+
             SessionManager.Instance.Remove(this);
 
             Console.WriteLine($"클라이언트({endPoint})와 연결 종료.");
