@@ -9,6 +9,8 @@ namespace Server
     {
         public int SessionId { get; set; }
 
+        public Player CurrentPlayer { get; set; }
+
         public void Send(IMessage packet)
         {
             string msgName = packet.Descriptor.Name.Replace("_", string.Empty);
@@ -26,6 +28,14 @@ namespace Server
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"클라이언트({endPoint})와 연결 성공.");
+
+            CurrentPlayer = PlayerManager.Instance.Add();
+            CurrentPlayer.Info.Name = $"PLAYER_{CurrentPlayer.Info.PlayerId}";
+            CurrentPlayer.Info.PosX = 0;
+            CurrentPlayer.Info.PosY = 0;
+            CurrentPlayer.Session = this;
+
+            GameRoomManager.Instance.Find(1).EnterGame(CurrentPlayer);
         }
 
         public override void OnDisconnected(EndPoint endPoint)
