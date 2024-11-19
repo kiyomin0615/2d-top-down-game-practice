@@ -10,6 +10,12 @@ public class ServerSession : PacketSession
 	public override void OnConnected(EndPoint endPoint)
 	{
 		Debug.Log($"서버({endPoint})와 연결 성공.");
+
+		// You can manipulate Unity on main thread only
+		PacketManager.Instance.CustomPacketHandler = (session, message, id) =>
+		{
+			PacketQueue.Instance.Push(id, message);
+		};
 	}
 
 	public override void OnDisconnected(EndPoint endPoint)

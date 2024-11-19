@@ -35,7 +35,7 @@ public class NetworkManager
 		List<PacketMessage> list = PacketQueue.Instance.PopAll(); // maybe list is a null or something
 		foreach (PacketMessage packet in list)
 		{
-			Action<PacketSession, IMessage> handler = PacketManager.Instance.GetPacketHandler(packet.Id);
+			Action<PacketSession, IMessage> handler = PacketManager.Instance.GetActualPacketHandler(packet.Id);
 			if (handler != null)
 				handler.Invoke(session, packet.Message);
 		}
