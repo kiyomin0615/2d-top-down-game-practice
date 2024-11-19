@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Definition;
+using Google.Protobuf.Protocol;
 
 public class PlayerController : EntityController
 {
@@ -19,7 +19,7 @@ public class PlayerController : EntityController
     {
         if (State == EntityState.Idle)
         {
-            switch (lastMoveDir)
+            switch (lastDir)
             {
                 case Direction.Up:
                     spriteRenderer.flipX = false;
@@ -41,7 +41,7 @@ public class PlayerController : EntityController
         }
         else if (State == EntityState.Move)
         {
-            switch (MoveDir)
+            switch (Dir)
             {
                 case Direction.Up:
                     spriteRenderer.flipX = false;
@@ -63,7 +63,7 @@ public class PlayerController : EntityController
         }
         else if (State == EntityState.Skill)
         {
-            switch (lastMoveDir)
+            switch (lastDir)
             {
                 case Direction.Up:
                     spriteRenderer.flipX = false;
@@ -97,7 +97,7 @@ public class PlayerController : EntityController
     protected override void UpdateIdleState()
     {
         // To Move State
-        if (MoveDir != Direction.None)
+        if (Dir != Direction.None)
         {
             State = EntityState.Move;
             return;
@@ -125,7 +125,7 @@ public class PlayerController : EntityController
     {
         GameObject arrow = Manager.Resource.Instantiate("Entity/Arrow");
         ArrowController arrowController = arrow.GetComponent<ArrowController>();
-        arrowController.MoveDir = lastMoveDir;
+        arrowController.Dir = lastDir;
         arrowController.CellPos = CellPos;
 
         isSimpleAttack = false;

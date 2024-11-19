@@ -4,23 +4,6 @@ using UnityEngine;
 
 public class Definition
 {
-    public enum EntityState
-    {
-        Idle,
-        Move,
-        Skill,
-        Die,
-    }
-
-    public enum Direction
-    {
-        None,
-        Up,
-        Down,
-        Left,
-        Right,
-    }
-
     public enum CameraMode
     {
         QuaterView,

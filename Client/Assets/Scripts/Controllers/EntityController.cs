@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 using static Definition;
 
@@ -9,43 +10,71 @@ public class EntityController : MonoBehaviour
 
     public float speed = 5.0f;
 
-    public Vector3Int CellPos { get; set; } = new Vector3Int(0, -4);
-
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
 
-    protected EntityState state = EntityState.Idle;
-    public virtual EntityState State
+    PositionInfo positionInfo = new PositionInfo();
+    public PositionInfo PositionInfo
     {
-        get { return state; }
+        get
+        {
+            return PositionInfo;
+        }
         set
         {
-            if (state == value)
+            if (positionInfo.Equals(value))
                 return;
 
-            state = value;
-
+            positionInfo = value;
             UpdateAnimation();
         }
     }
 
-    protected Direction lastMoveDir = Direction.Down;
-    protected Direction moveDir = Direction.Down;
-    public Direction MoveDir
+    public Vector3Int CellPos
     {
         get
         {
-            return moveDir;
+            return new Vector3Int(PositionInfo.PosX, PositionInfo.PosY, 0);
         }
         set
         {
-            if (moveDir == value)
+            PositionInfo.PosX = value.x;
+            PositionInfo.PosY = value.y;
+        }
+    }
+
+    public virtual EntityState State
+    {
+        get
+        {
+            return PositionInfo.State;
+        }
+        set
+        {
+            if (PositionInfo.State == value)
                 return;
 
-            moveDir = value;
+            PositionInfo.State = value;
+            UpdateAnimation();
+        }
+    }
+
+    protected Direction lastDir = Direction.Down;
+    public Direction Dir
+    {
+        get
+        {
+            return PositionInfo.Dir;
+        }
+        set
+        {
+            if (PositionInfo.Dir == value)
+                return;
+
+            PositionInfo.Dir = value;
             if (value != Direction.None)
             {
-                lastMoveDir = value;
+                lastDir = value;
             }
 
             UpdateAnimation();
@@ -56,7 +85,7 @@ public class EntityController : MonoBehaviour
     {
         if (State == EntityState.Idle)
         {
-            switch (lastMoveDir)
+            switch (lastDir)
             {
                 case Direction.Up:
                     spriteRenderer.flipX = false;
@@ -78,7 +107,7 @@ public class EntityController : MonoBehaviour
         }
         else if (State == EntityState.Move)
         {
-            switch (MoveDir)
+            switch (Dir)
             {
                 case Direction.Up:
                     spriteRenderer.flipX = false;
@@ -101,7 +130,7 @@ public class EntityController : MonoBehaviour
         else if (State == EntityState.Skill)
         {
             // TODO
-            switch (lastMoveDir)
+            switch (lastDir)
             {
                 case Direction.Up:
                     spriteRenderer.flipX = false;
@@ -200,7 +229,7 @@ public class EntityController : MonoBehaviour
     {
         Vector3Int cellPos = CellPos;
 
-        switch (lastMoveDir)
+        switch (lastDir)
         {
             case Direction.Up:
                 cellPos += Vector3Int.up;
@@ -238,7 +267,7 @@ public class EntityController : MonoBehaviour
     public virtual void MoveToNextPos()
     {
         // To Idle State
-        if (MoveDir == Direction.None)
+        if (Dir == Direction.None)
         {
             State = EntityState.Idle;
             return;
@@ -246,7 +275,7 @@ public class EntityController : MonoBehaviour
 
         Vector3Int destPos = CellPos;
 
-        switch (MoveDir)
+        switch (Dir)
         {
             case Direction.Up:
                 destPos += Vector3Int.up;

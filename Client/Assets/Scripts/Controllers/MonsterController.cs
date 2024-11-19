@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Definition;
+using Google.Protobuf.Protocol;
 
 public class MonsterController : EntityController
 {
@@ -18,13 +18,15 @@ public class MonsterController : EntityController
     Coroutine coSkill;
     [SerializeField] float skillRange = 1.0f;
 
-
     public override EntityState State
     {
-        get { return state; }
+        get
+        {
+            return PositionInfo.State;
+        }
         set
         {
-            if (state == value)
+            if (PositionInfo.State == value)
                 return;
 
             base.State = value;
@@ -48,7 +50,7 @@ public class MonsterController : EntityController
         base.Init();
 
         State = EntityState.Idle;
-        MoveDir = Direction.None;
+        Dir = Direction.None;
         speed = 3.0f;
         isSimpleAttack = UnityEngine.Random.Range(0f, 1f) < 0.5f ? true : false;
         if (isSimpleAttack)
@@ -136,7 +138,7 @@ public class MonsterController : EntityController
             Vector3Int targetDir = destCellPos - CellPos;
             if (targetDir.magnitude <= skillRange && (targetDir.x == 0 || targetDir.y == 0))
             {
-                MoveDir = GetDirectionOfTargetCell(targetDir);
+                Dir = GetDirectionOfTargetCell(targetDir);
                 State = EntityState.Skill;
 
                 if (isSimpleAttack)
@@ -162,7 +164,7 @@ public class MonsterController : EntityController
         Vector3Int nextCellPos = path[1];
         Vector3Int dir = nextCellPos - CellPos;
 
-        MoveDir = GetDirectionOfTargetCell(dir);
+        Dir = GetDirectionOfTargetCell(dir);
 
         if (Manager.Map.CanGo(nextCellPos) && Manager.Object.FindEntityOnMap(nextCellPos) == null)
         {
@@ -196,7 +198,7 @@ public class MonsterController : EntityController
     {
         GameObject arrow = Manager.Resource.Instantiate("Entity/Arrow");
         ArrowController arrowController = arrow.GetComponent<ArrowController>();
-        arrowController.MoveDir = lastMoveDir;
+        arrowController.Dir = lastDir;
         arrowController.CellPos = CellPos;
 
         isSimpleAttack = false;

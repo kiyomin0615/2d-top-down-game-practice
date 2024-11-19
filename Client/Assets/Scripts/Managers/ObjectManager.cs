@@ -9,27 +9,27 @@ public class ObjectManager
     public MyPlayerController MyPlayerController { get; set; }
     Dictionary<int, GameObject> objectDict = new Dictionary<int, GameObject>();
 
-    public void Add(PlayerInfo info, bool isMyPlayer = false)
+    public void Add(PlayerInfo playerInfo, bool isMyPlayer = false)
     {
         if (isMyPlayer)
         {
             GameObject go = Manager.Resource.Instantiate("Entity/MyPlayer");
-            go.name = info.Name;
-            objectDict.Add(info.PlayerId, go);
+            go.name = playerInfo.Name;
+            objectDict.Add(playerInfo.PlayerId, go);
 
             MyPlayerController = go.GetComponent<MyPlayerController>();
-            MyPlayerController.Id = info.PlayerId;
-            MyPlayerController.CellPos = new Vector3Int(info.PosX, info.PosY, 0);
+            MyPlayerController.Id = playerInfo.PlayerId;
+            MyPlayerController.PositionInfo = playerInfo.PositionInfo;
         }
         else
         {
             GameObject go = Manager.Resource.Instantiate("Entity/Player");
-            go.name = info.Name;
-            objectDict.Add(info.PlayerId, go);
+            go.name = playerInfo.Name;
+            objectDict.Add(playerInfo.PlayerId, go);
 
             PlayerController Player = go.GetComponent<PlayerController>();
-            Player.Id = info.PlayerId;
-            Player.CellPos = new Vector3Int(info.PosX, info.PosY, 0);
+            Player.Id = playerInfo.PlayerId;
+            Player.PositionInfo = playerInfo.PositionInfo;
         }
     }
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Definition;
+using Google.Protobuf.Protocol;
 
 public class ArrowController : EntityController
 {
@@ -9,7 +9,7 @@ public class ArrowController : EntityController
     {
         base.Init();
 
-        switch (lastMoveDir)
+        switch (lastDir)
         {
             case Direction.Up:
                 transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
@@ -35,7 +35,7 @@ public class ArrowController : EntityController
     {
         Vector3Int destPos = CellPos;
 
-        switch (MoveDir)
+        switch (Dir)
         {
             case Direction.Up:
                 destPos += Vector3Int.up;

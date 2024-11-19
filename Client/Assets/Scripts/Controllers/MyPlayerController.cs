@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Definition;
+using Google.Protobuf.Protocol;
 
 public class MyPlayerController : PlayerController
 {
@@ -28,7 +28,7 @@ public class MyPlayerController : PlayerController
     protected override void UpdateIdleState()
     {
         // To Move State
-        if (MoveDir != Direction.None)
+        if (Dir != Direction.None)
         {
             State = EntityState.Move;
             return;
@@ -56,23 +56,23 @@ public class MyPlayerController : PlayerController
     {
         if (Input.GetKey(KeyCode.W))
         {
-            MoveDir = Direction.Up;
+            Dir = Direction.Up;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            MoveDir = Direction.Down;
+            Dir = Direction.Down;
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            MoveDir = Direction.Left;
+            Dir = Direction.Left;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            MoveDir = Direction.Right;
+            Dir = Direction.Right;
         }
         else
         {
-            MoveDir = Direction.None;
+            Dir = Direction.None;
         }
     }
 }
