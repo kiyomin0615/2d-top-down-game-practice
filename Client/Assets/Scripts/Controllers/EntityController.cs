@@ -27,8 +27,9 @@ public class EntityController : MonoBehaviour
             if (positionInfo.Equals(value))
                 return;
 
-            positionInfo = value;
-            UpdateAnimation();
+            CellPos = new Vector3Int(value.PosX, value.PosY, 0);
+            State = value.State;
+            Dir = value.Dir;
         }
     }
 
@@ -180,6 +181,11 @@ public class EntityController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         transform.position = Manager.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
+
+        State = EntityState.Idle;
+        Dir = Direction.None;
+        CellPos = new Vector3Int(0, 0, 0);
+        UpdateAnimation();
     }
 
     protected virtual void UpdateController()

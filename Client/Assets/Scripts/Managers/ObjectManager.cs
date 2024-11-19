@@ -33,14 +33,14 @@ public class ObjectManager
         }
     }
 
-    public void Add(int id, GameObject go)
-    {
-        objectDict.Add(id, go);
-    }
-
     public void Remove(int id)
     {
+        GameObject go = FindEntityOnMap(id);
+        if (go == null)
+            return;
+
         objectDict.Remove(id);
+        Manager.Resource.Destroy(go);
     }
 
     public void RemoveMyPlayer()
@@ -87,6 +87,11 @@ public class ObjectManager
 
     public void Clear()
     {
+        foreach (GameObject go in objectDict.Values)
+        {
+            Manager.Resource.Destroy(go);
+        }
+
         objectDict.Clear();
     }
 }
