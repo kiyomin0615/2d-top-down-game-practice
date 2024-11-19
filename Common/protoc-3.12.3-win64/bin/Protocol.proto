@@ -15,14 +15,14 @@ enum MsgId {
 }
 
 message S_EnterGame {
-  PlayerInfo player = 1;
+  PlayerInfo playerInfo = 1;
 }
 
 message S_ExitGame {
 }
 
 message S_Spawn {
-  repeated PlayerInfo players = 1;
+  repeated PlayerInfo playerInfos = 1;
 }
 
 message S_Despawn {

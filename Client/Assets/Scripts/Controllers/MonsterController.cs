@@ -213,7 +213,7 @@ public class MonsterController : EntityController
         dieEffect.GetComponent<Animator>().Play("DieEffect");
         Manager.Resource.Destroy(dieEffect, 0.5f);
 
-        Manager.Object.Remove(gameObject);
+        Manager.Object.Remove(Id);
         Manager.Resource.Destroy(gameObject);
     }
 }

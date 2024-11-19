@@ -6,9 +6,14 @@ using static Definition;
 
 public class PlayerController : EntityController
 {
-    bool isSimpleAttack = true;
+    protected bool isSimpleAttack = true;
 
-    Coroutine coSkill;
+    protected Coroutine coSkill;
+
+    protected override void Init()
+    {
+        base.Init();
+    }
 
     protected override void UpdateAnimation()
     {
@@ -84,53 +89,9 @@ public class PlayerController : EntityController
         }
     }
 
-    protected override void Init()
-    {
-        base.Init();
-    }
-
     protected override void UpdateController()
     {
-        switch (State)
-        {
-            case EntityState.Idle:
-                GetMoveInput();
-                break;
-            case EntityState.Move:
-                GetMoveInput();
-                break;
-        }
-
         base.UpdateController();
-    }
-
-    void LateUpdate()
-    {
-        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
-    }
-
-    void GetMoveInput()
-    {
-        if (Input.GetKey(KeyCode.W))
-        {
-            MoveDir = Direction.Up;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            MoveDir = Direction.Down;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            MoveDir = Direction.Left;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            MoveDir = Direction.Right;
-        }
-        else
-        {
-            MoveDir = Direction.None;
-        }
     }
 
     protected override void UpdateIdleState()
@@ -140,18 +101,6 @@ public class PlayerController : EntityController
         {
             State = EntityState.Move;
             return;
-        }
-
-        // To Skill State
-        if (Input.GetKey(KeyCode.F))
-        {
-            State = EntityState.Skill;
-            coSkill = StartCoroutine("CoAttackPunch");
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            State = EntityState.Skill;
-            coSkill = StartCoroutine("CoShootArrow");
         }
     }
 

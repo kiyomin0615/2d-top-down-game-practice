@@ -27,7 +27,7 @@ namespace Server
                 // Server to the new player
                 {
                     S_EnterGame enterPacket = new S_EnterGame();
-                    enterPacket.Player = newPlayer.Info;
+                    enterPacket.PlayerInfo = newPlayer.Info;
                     newPlayer.Session.Send(enterPacket);
 
                     S_Spawn spawnPacket = new S_Spawn();
@@ -35,7 +35,7 @@ namespace Server
                     {
                         if (newPlayer != p)
                         {
-                            spawnPacket.Players.Add(p.Info);
+                            spawnPacket.PlayerInfos.Add(p.Info);
                         }
                     }
                     newPlayer.Session.Send(spawnPacket);
@@ -44,7 +44,7 @@ namespace Server
                 // Server to other players
                 {
                     S_Spawn spawnPacket = new S_Spawn();
-                    spawnPacket.Players.Add(newPlayer.Info);
+                    spawnPacket.PlayerInfos.Add(newPlayer.Info);
                     foreach (Player p in players)
                     {
                         if (newPlayer != p)

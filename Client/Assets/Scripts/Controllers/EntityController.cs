@@ -5,6 +5,8 @@ using static Definition;
 
 public class EntityController : MonoBehaviour
 {
+    public int Id { get; set; }
+
     public float speed = 5.0f;
 
     public Vector3Int CellPos { get; set; } = new Vector3Int(0, -4);

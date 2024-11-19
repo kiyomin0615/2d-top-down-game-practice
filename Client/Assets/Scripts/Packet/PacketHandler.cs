@@ -10,38 +10,38 @@ class PacketHandler
 	public static void HandleS_EnterGamePacket(PacketSession session, IMessage packet)
 	{
 		S_EnterGame enterPacket = packet as S_EnterGame;
-		ServerSession serverSession = session as ServerSession;
-
-		Debug.Log("S_EnterGame Packet has arrived.");
-		Debug.Log(enterPacket.Player);
+		Manager.Object.Add(enterPacket.PlayerInfo, isMyPlayer: true);
 	}
+
 	public static void HandleS_ExitGamePacket(PacketSession session, IMessage packet)
 	{
 		S_ExitGame exitPacket = packet as S_ExitGame;
-		ServerSession serverSession = session as ServerSession;
-
-		Debug.Log("S_ExitGame Packet has arrived.");
+		Manager.Object.RemoveMyPlayer();
 	}
+
 	public static void HandleS_SpawnPacket(PacketSession session, IMessage packet)
 	{
 		S_Spawn spawnPacket = packet as S_Spawn;
-		ServerSession serverSession = session as ServerSession;
 
-		Debug.Log("S_Spawn Packet has arrived.");
-		Debug.Log(spawnPacket.Players);
+		foreach (PlayerInfo playerInfo in spawnPacket.PlayerInfos)
+		{
+			Manager.Object.Add(playerInfo, isMyPlayer: false);
+		}
 	}
+
 	public static void HandleS_DespawnPacket(PacketSession session, IMessage packet)
 	{
 		S_Despawn despawnPacket = packet as S_Despawn;
-		ServerSession serverSession = session as ServerSession;
 
-		Debug.Log("S_Despawn Packet has arrived.");
+		foreach (int playerId in despawnPacket.PlayerIds)
+		{
+			Manager.Object.Remove(playerId);
+		}
 	}
+
 	public static void HandleS_MovePacket(PacketSession session, IMessage packet)
 	{
 		S_Move movePacket = packet as S_Move;
-		ServerSession serverSession = session as ServerSession;
-
 		Debug.Log("S_Move Packet has arrived.");
 	}
 }
