@@ -75,4 +75,19 @@ public class MyPlayerController : PlayerController
             Dir = Direction.None;
         }
     }
+
+    public override void MoveToNextPos()
+    {
+        EntityState prevState = State;
+        Vector3Int prevCellPos = CellPos;
+
+        base.MoveToNextPos();
+
+        if (prevState != State || prevCellPos != CellPos)
+        {
+            C_Move movePacket = new C_Move();
+            movePacket.PositionInfo = PositionInfo;
+            Manager.Network.Send(movePacket);
+        }
+    }
 }

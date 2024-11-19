@@ -78,6 +78,13 @@ public class ObjectManager
         return null;
     }
 
+    public GameObject FindEntityOnMap(int entityId)
+    {
+        GameObject go = null;
+        objectDict.TryGetValue(entityId, out go);
+        return go;
+    }
+
     public void Clear()
     {
         objectDict.Clear();

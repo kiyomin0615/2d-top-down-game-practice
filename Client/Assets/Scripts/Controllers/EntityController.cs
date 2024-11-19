@@ -18,7 +18,7 @@ public class EntityController : MonoBehaviour
     {
         get
         {
-            return PositionInfo;
+            return positionInfo;
         }
         set
         {

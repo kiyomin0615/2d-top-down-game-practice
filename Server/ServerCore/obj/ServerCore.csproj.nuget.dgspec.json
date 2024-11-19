@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj": {}
+    "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj": {
+    "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj",
+        "projectUniqueName": "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj",
         "projectName": "ServerCore",
-        "projectPath": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj",
+        "projectPath": "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\ServerCore.csproj",
         "packagesPath": "C:\\Users\\moeda\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\obj\\",
+        "outputPath": "c:\\Users\\moeda\\OneDrive\\Desktop\\IT\\Unity\\2d-top-down-game-practice\\Server\\ServerCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\moeda\\AppData\\Roaming\\NuGet\\NuGet.Config"

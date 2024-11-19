@@ -42,6 +42,15 @@ class PacketHandler
 	public static void HandleS_MovePacket(PacketSession session, IMessage packet)
 	{
 		S_Move movePacket = packet as S_Move;
-		Debug.Log("S_Move Packet has arrived.");
+		
+		GameObject go = Manager.Object.FindEntityOnMap(movePacket.PlayerId);
+		if (go == null)
+			return;
+
+		EntityController entityController = go.GetComponent<EntityController>();
+		if (entityController == null)
+			return;
+
+		entityController.PositionInfo = movePacket.PositionInfo;
 	}
 }
