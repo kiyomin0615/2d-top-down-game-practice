@@ -8,7 +8,7 @@ namespace Server
 {
     public class Player
     {
-        public PlayerInfo Info { get; set; } = new PlayerInfo();
+        public PlayerInfo PlayerInfo { get; set; } = new PlayerInfo() { PositionInfo = new PositionInfo() };
         public GameRoom Room { get; set; }
         public ClientSession Session { get; set; }
     }

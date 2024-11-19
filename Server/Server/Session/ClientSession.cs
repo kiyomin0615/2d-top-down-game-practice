@@ -30,9 +30,11 @@ namespace Server
             Console.WriteLine($"클라이언트({endPoint})와 연결 성공.");
 
             CurrentPlayer = PlayerManager.Instance.Add();
-            CurrentPlayer.Info.Name = $"PLAYER_{CurrentPlayer.Info.PlayerId}";
-            CurrentPlayer.Info.PosX = 0;
-            CurrentPlayer.Info.PosY = 0;
+            CurrentPlayer.PlayerInfo.Name = $"PLAYER_{CurrentPlayer.PlayerInfo.PlayerId}";
+            CurrentPlayer.PlayerInfo.PositionInfo.State = EntityState.Idle;
+            CurrentPlayer.PlayerInfo.PositionInfo.Dir = Direction.None;
+            CurrentPlayer.PlayerInfo.PositionInfo.PosX = 0;
+            CurrentPlayer.PlayerInfo.PositionInfo.PosY = 0;
             CurrentPlayer.Session = this;
 
             GameRoomManager.Instance.Find(1).EnterGame(CurrentPlayer);
@@ -40,7 +42,7 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
-            GameRoomManager.Instance.Find(1).ExitGame(CurrentPlayer.Info.PlayerId);
+            GameRoomManager.Instance.Find(1).ExitGame(CurrentPlayer.PlayerInfo.PlayerId);
 
             SessionManager.Instance.Remove(this);
 

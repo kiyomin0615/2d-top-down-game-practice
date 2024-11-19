@@ -20,7 +20,7 @@ namespace Server
 
             lock (lockObject)
             {
-                player.Info.PlayerId = playerId;
+                player.PlayerInfo.PlayerId = playerId;
                 playerDict.Add(playerId, player);
                 playerId++;
             }
