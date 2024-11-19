@@ -78,16 +78,51 @@ public class MyPlayerController : PlayerController
 
     public override void MoveToNextPos()
     {
-        EntityState prevState = State;
-        Vector3Int prevCellPos = CellPos;
+        // To Idle State
+        if (Dir == Direction.None)
+        {
+            State = EntityState.Idle;
+            SendMovePacketIfUpdated();
+            return;
+        }
 
-        base.MoveToNextPos();
+        Vector3Int destPos = CellPos;
 
-        if (prevState != State || prevCellPos != CellPos)
+        switch (Dir)
+        {
+            case Direction.Up:
+                destPos += Vector3Int.up;
+                break;
+            case Direction.Down:
+                destPos += Vector3Int.down;
+                break;
+            case Direction.Left:
+                destPos += Vector3Int.left;
+                break;
+            case Direction.Right:
+                destPos += Vector3Int.right;
+                break;
+        }
+
+        if (Manager.Map.CanGo(destPos))
+        {
+            if (Manager.Object.FindEntityOnMap(destPos) == null)
+            {
+                CellPos = destPos;
+            }
+        }
+
+        SendMovePacketIfUpdated();
+    }
+
+    void SendMovePacketIfUpdated()
+    {
+        if (isUpdated)
         {
             C_Move movePacket = new C_Move();
             movePacket.PositionInfo = PositionInfo;
             Manager.Network.Send(movePacket);
+            isUpdated = false;
         }
     }
 }

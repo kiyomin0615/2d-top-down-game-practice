@@ -10,6 +10,8 @@ public class EntityController : MonoBehaviour
 
     public float speed = 5.0f;
 
+    protected bool isUpdated = false;
+
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
 
@@ -38,8 +40,12 @@ public class EntityController : MonoBehaviour
         }
         set
         {
+            if (PositionInfo.PosX == value.x && PositionInfo.PosY == value.y)
+                return;
+
             PositionInfo.PosX = value.x;
             PositionInfo.PosY = value.y;
+            isUpdated = true;
         }
     }
 
@@ -55,6 +61,7 @@ public class EntityController : MonoBehaviour
                 return;
 
             PositionInfo.State = value;
+            isUpdated = true;
             UpdateAnimation();
         }
     }
@@ -76,6 +83,7 @@ public class EntityController : MonoBehaviour
             {
                 lastDir = value;
             }
+            isUpdated = true;
 
             UpdateAnimation();
         }
@@ -264,39 +272,5 @@ public class EntityController : MonoBehaviour
 
     public virtual void OnTakeDamage() { }
 
-    public virtual void MoveToNextPos()
-    {
-        // To Idle State
-        if (Dir == Direction.None)
-        {
-            State = EntityState.Idle;
-            return;
-        }
-
-        Vector3Int destPos = CellPos;
-
-        switch (Dir)
-        {
-            case Direction.Up:
-                destPos += Vector3Int.up;
-                break;
-            case Direction.Down:
-                destPos += Vector3Int.down;
-                break;
-            case Direction.Left:
-                destPos += Vector3Int.left;
-                break;
-            case Direction.Right:
-                destPos += Vector3Int.right;
-                break;
-        }
-
-        if (Manager.Map.CanGo(destPos))
-        {
-            if (Manager.Object.FindEntityOnMap(destPos) == null)
-            {
-                CellPos = destPos;
-            }
-        }
-    }
+    public virtual void MoveToNextPos() { }
 }
