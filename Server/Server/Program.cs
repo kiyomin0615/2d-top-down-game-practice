@@ -19,7 +19,7 @@ namespace Server
             string hostName = Dns.GetHostName(); // 호스트 네임
             IPHostEntry ipInstance = Dns.GetHostEntry(hostName); // ip 관련 인스턴스
             IPAddress ip = ipInstance.AddressList[0]; // ip 주소
-            IPEndPoint endPoint = new IPEndPoint(ip, 7777); // 엔드포인트
+            IPEndPoint endPoint = new IPEndPoint(ip, 8888); // 엔드포인트
 
             listener.Init(endPoint, () =>
             {

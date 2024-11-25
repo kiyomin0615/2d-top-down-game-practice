@@ -104,18 +104,20 @@ public class PlayerController : EntityController
         }
     }
 
+    protected virtual void SendPacketIfUpdated() { }
+
+    public void UseSkill(int skillId)
+    {
+        if (skillId == 1)
+        {
+            coSkill = StartCoroutine("CoAttackPunch");
+        }
+    }
+
     IEnumerator CoAttackPunch()
     {
-        GameObject target = Manager.Object.FindEntityOnMap(GetForwardCellPos());
-        if (target != null)
-        {
-            EntityController controller = target.GetComponent<EntityController>();
-            if (controller != null)
-                controller.OnTakeDamage();
-        }
-
         isSimpleAttack = true;
-
+        State = EntityState.Skill;
         yield return new WaitForSeconds(0.3f);
         State = EntityState.Idle;
         coSkill = null;

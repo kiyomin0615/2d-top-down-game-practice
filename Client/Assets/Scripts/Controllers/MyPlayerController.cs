@@ -35,16 +35,33 @@ public class MyPlayerController : PlayerController
         }
 
         // To Skill State
-        if (Input.GetKey(KeyCode.F))
+        if (coSkillCooltime == null && Input.GetKey(KeyCode.F))
         {
-            State = EntityState.Skill;
-            coSkill = StartCoroutine("CoAttackPunch");
+            Debug.Log("PUNCH!");
+
+            C_Skill skillPacket = new C_Skill() { SkillInfo = new SkillInfo() };
+            skillPacket.SkillInfo.SkillId = 1;
+            Manager.Network.Send(skillPacket);
+
+            coSkillCooltime = StartCoroutine("CoWaitForCooltime", 0.3f);
         }
-        else if (Input.GetMouseButton(0))
+        else if (coSkillCooltime == null && Input.GetMouseButton(0))
         {
-            State = EntityState.Skill;
-            coSkill = StartCoroutine("CoShootArrow");
+            Debug.Log("SHOOT ARROW!");
+
+            C_Skill skillPacket = new C_Skill() { SkillInfo = new SkillInfo() };
+            skillPacket.SkillInfo.SkillId = 2;
+            Manager.Network.Send(skillPacket);
+
+            coSkillCooltime = StartCoroutine("CoWaitForCooltime", 0.3f);
         }
+    }
+
+    Coroutine coSkillCooltime;
+    IEnumerator CoWaitForCooltime(float cooltime)
+    {
+        yield return new WaitForSeconds(cooltime);
+        coSkillCooltime = null;
     }
 
     void LateUpdate()
@@ -82,7 +99,7 @@ public class MyPlayerController : PlayerController
         if (Dir == Direction.None)
         {
             State = EntityState.Idle;
-            SendMovePacketIfUpdated();
+            SendPacketIfUpdated();
             return;
         }
 
@@ -112,10 +129,10 @@ public class MyPlayerController : PlayerController
             }
         }
 
-        SendMovePacketIfUpdated();
+        SendPacketIfUpdated();
     }
 
-    void SendMovePacketIfUpdated()
+    protected override void SendPacketIfUpdated()
     {
         if (isUpdated)
         {

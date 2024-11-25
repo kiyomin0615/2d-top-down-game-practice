@@ -42,7 +42,7 @@ class PacketHandler
 	public static void HandleS_MovePacket(PacketSession session, IMessage packet)
 	{
 		S_Move movePacket = packet as S_Move;
-		
+
 		GameObject go = Manager.Object.FindEntityOnMap(movePacket.PlayerId);
 		if (go == null)
 			return;
@@ -52,5 +52,22 @@ class PacketHandler
 			return;
 
 		entityController.PositionInfo = movePacket.PositionInfo;
+	}
+
+	public static void HandleS_SkillPacket(PacketSession session, IMessage packet)
+	{
+		S_Skill skillPacket = packet as S_Skill;
+
+		GameObject target = Manager.Object.FindEntityOnMap(skillPacket.PlayerId);
+		Debug.Log(skillPacket.PlayerId);
+		Debug.Log(target);
+		if (target == null)
+			return;
+
+		PlayerController playerController = target.GetComponent<PlayerController>();
+		if (playerController != null)
+		{
+			playerController.UseSkill(skillPacket.SkillInfo.SkillId);
+		}
 	}
 }

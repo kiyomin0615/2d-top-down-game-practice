@@ -33,6 +33,12 @@ public class EntityController : MonoBehaviour
         }
     }
 
+    public void SyncPosition()
+    {
+        Vector3 destination = Manager.Map.CurrentGrid.CellToWorld(CellPos) + new Vector3(0.5f, 0.5f);
+        transform.position = destination;
+    }
+
     public Vector3Int CellPos
     {
         get
@@ -184,7 +190,6 @@ public class EntityController : MonoBehaviour
 
         State = EntityState.Idle;
         Dir = Direction.None;
-        CellPos = new Vector3Int(0, 0, 0);
         UpdateAnimation();
     }
 
@@ -219,7 +224,6 @@ public class EntityController : MonoBehaviour
         if (dist < 0.1f)
         {
             transform.position = destination;
-
             MoveToNextPos();
         }
         else
