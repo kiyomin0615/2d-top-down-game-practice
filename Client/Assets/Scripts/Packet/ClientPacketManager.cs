@@ -33,6 +33,8 @@ public class PacketManager
         actualPacketHandlerDict.Add((ushort)MsgId.SDespawn, PacketHandler.HandleS_DespawnPacket);
         packetHandlerDict.Add((ushort)MsgId.SMove, HandlePacket<S_Move>);
         actualPacketHandlerDict.Add((ushort)MsgId.SMove, PacketHandler.HandleS_MovePacket);
+        packetHandlerDict.Add((ushort)MsgId.SSkill, HandlePacket<S_Skill>);
+        actualPacketHandlerDict.Add((ushort)MsgId.SSkill, PacketHandler.HandleS_SkillPacket);
     }
 
     public void ProcessPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IMessage> callback = null)

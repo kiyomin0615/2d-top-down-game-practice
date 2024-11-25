@@ -25,6 +25,8 @@ public class PacketManager
         
         packetHandlerDict.Add((ushort)MsgId.CMove, HandlePacket<C_Move>);
         actualPacketHandlerDict.Add((ushort)MsgId.CMove, PacketHandler.HandleC_MovePacket);
+        packetHandlerDict.Add((ushort)MsgId.CSkill, HandlePacket<C_Skill>);
+        actualPacketHandlerDict.Add((ushort)MsgId.CSkill, PacketHandler.HandleC_SkillPacket);
     }
 
     public void ProcessPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IMessage> callback = null)

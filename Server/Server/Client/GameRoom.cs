@@ -99,5 +99,50 @@ namespace Server
                 }
             }
         }
+
+        public void HandleMove(Player player, C_Move movePacket)
+        {
+            if (player == null)
+                return;
+
+            lock (lockObject)
+            {
+                // TODO: validation
+
+                PlayerInfo playerInfo = player.PlayerInfo;
+                playerInfo.PositionInfo = movePacket.PositionInfo;
+
+                S_Move resMovePacket = new S_Move();
+                resMovePacket.PlayerId = player.PlayerInfo.PlayerId;
+                resMovePacket.PositionInfo = movePacket.PositionInfo;
+
+                this.Broadcast(resMovePacket);
+            }
+        }
+
+        public void HandleSkill(Player player, C_Skill skillPacket)
+        {
+            if (player == null)
+                return;
+
+            lock (lockObject)
+            {
+                PlayerInfo playerInfo = player.PlayerInfo;
+                if (playerInfo.PositionInfo.State != EntityState.Idle)
+                    return;
+
+                // TODO: validation
+
+                playerInfo.PositionInfo.State = EntityState.Skill;
+
+                S_Skill resSkillPacket = new S_Skill() { SkillInfo = new SkillInfo() };
+                resSkillPacket.PlayerId = playerInfo.PlayerId;
+                resSkillPacket.SkillInfo.SkillId = 1;
+
+                this.Broadcast(resSkillPacket);
+
+                // TODO: give damage to target
+            }
+        }
     }
 }

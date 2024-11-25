@@ -16,18 +16,26 @@ public class PacketHandler
 
         Console.WriteLine($"C_Move: ({movePacket.PositionInfo.PosX}, {movePacket.PositionInfo.PosX})");
 
-        if (clientSession.CurrentPlayer == null || clientSession.CurrentPlayer.Room == null)
+        Player player = clientSession.CurrentPlayer;
+        GameRoom room = player.Room;
+        if (player == null || room == null)
             return;
 
-        // TODO: validate packets
+        room.HandleMove(player, movePacket);
+    }
 
-        PlayerInfo playerInfo = clientSession.CurrentPlayer.PlayerInfo;
-        playerInfo.PositionInfo = movePacket.PositionInfo;
+    public static void HandleC_SkillPacket(PacketSession session, IMessage packet)
+    {
+        C_Skill skillPacket = packet as C_Skill;
+        ClientSession clientSession = session as ClientSession;
 
-        S_Move resMovePacket = new S_Move();
-        resMovePacket.PlayerId = clientSession.CurrentPlayer.PlayerInfo.PlayerId;
-        resMovePacket.PositionInfo = movePacket.PositionInfo;
+        Console.WriteLine($"C_Skill: {skillPacket.SkillInfo.SkillId}");
 
-        clientSession.CurrentPlayer.Room.Broadcast(resMovePacket);
+        Player player = clientSession.CurrentPlayer;
+        GameRoom room = player.Room;
+        if (player == null || room == null)
+            return;
+
+        room.HandleSkill(player, skillPacket);
     }
 }
